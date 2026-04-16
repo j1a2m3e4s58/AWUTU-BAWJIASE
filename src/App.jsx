@@ -60,14 +60,6 @@ const AuthenticatedApp = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
-  if (isLoadingPublicSettings || (isAdminRoute && isLoadingAuth)) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-background">
-        <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
@@ -103,7 +95,7 @@ const AuthenticatedApp = () => {
       </Route>
 
       {/* Admin routes */}
-      <Route element={<RequireAdmin />}>
+      <Route element={<RequireAdmin authPending={isAdminRoute && isLoadingAuth} settingsPending={isLoadingPublicSettings} />}>
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/kings" element={<AdminKings />} />
