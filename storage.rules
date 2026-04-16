@@ -10,13 +10,19 @@ service firebase.storage {
       return signedIn() && request.auth.token.admin == true;
     }
 
+    // Temporary launch mode while the app uses the hidden admin password instead of Firebase Auth.
+    function launchAdminAccess() {
+      return true;
+    }
+
     match /public/{allPaths=**} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if launchAdminAccess();
     }
 
     match /{allPaths=**} {
-      allow read, write: if isAdmin();
+      allow read: if true;
+      allow write: if launchAdminAccess();
     }
   }
 }

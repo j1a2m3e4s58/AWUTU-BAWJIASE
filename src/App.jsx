@@ -55,6 +55,7 @@ import AdminSiteSettings from './pages/admin/AdminSiteSettings';
 import AdminMediaLibrary from './pages/admin/AdminMediaLibrary';
 import AdminBackups from './pages/admin/AdminBackups';
 import AdminHeroBanners from './pages/admin/AdminHeroBanners';
+import AdminLogin from './pages/admin/AdminLogin';
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
   const location = useLocation();
@@ -93,6 +94,7 @@ const AuthenticatedApp = () => {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
       </Route>
+      <Route path="/admin-login" element={<AdminLogin />} />
 
       {/* Admin routes */}
       <Route element={<RequireAdmin authPending={isAdminRoute && isLoadingAuth} settingsPending={isLoadingPublicSettings} />}>

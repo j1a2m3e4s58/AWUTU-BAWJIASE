@@ -7,7 +7,7 @@ export default function RequireAdmin({ authPending = false, settingsPending = fa
   const location = useLocation();
 
   if (!isUnlocked) {
-    return <Navigate to={`/?admin_required=${encodeURIComponent(location.pathname)}`} replace />;
+    return <Navigate to={`/admin-login?from=${encodeURIComponent(location.pathname)}`} replace />;
   }
 
   return <Outlet />;
