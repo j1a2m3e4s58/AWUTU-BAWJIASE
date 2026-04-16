@@ -49,12 +49,14 @@ export default function AdminTraining() {
 
   const createMutation = useMutation({
     mutationFn: (data) => firebaseApi.entities.TrainingVideo.create(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-training'] }); toast.success('Video created'); closeDialog(); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-training'] }); toast.success('Video created'); },
+    onError: (error) => { toast.error(error?.message || 'Failed to save video'); },
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => firebaseApi.entities.TrainingVideo.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-training'] }); toast.success('Video updated'); closeDialog(); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-training'] }); toast.success('Video updated'); },
+    onError: (error) => { toast.error(error?.message || 'Failed to update video'); },
   });
 
   const deleteMutation = useMutation({
@@ -79,6 +81,14 @@ export default function AdminTraining() {
         ? form.tags.split(',').map((tag) => tag.trim()).filter(Boolean)
         : form.tags,
     };
+    const optimisticId = editing ? editing.id : `pending-${Date.now()}`;
+    queryClient.setQueryData(['admin-training'], (current = []) => {
+      if (editing) {
+        return current.map((item) => (item.id === editing.id ? { ...item, ...payload } : item));
+      }
+      return [{ id: optimisticId, ...payload }, ...current];
+    });
+    closeDialog();
     if (editing) {
       updateMutation.mutate({ id: editing.id, data: payload });
     } else {

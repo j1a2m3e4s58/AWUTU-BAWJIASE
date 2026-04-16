@@ -26,12 +26,23 @@ export default function AdminAnnouncements() {
     initialData: [],
   });
 
-  const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.Announcement.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); setEditing(null); toast.success('Created'); } });
-  const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.Announcement.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); setEditing(null); toast.success('Updated'); } });
+  const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.Announcement.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); toast.success('Created'); }, onError: (error) => { toast.error(error?.message || 'Failed to save announcement'); } });
+  const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.Announcement.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); toast.success('Updated'); }, onError: (error) => { toast.error(error?.message || 'Failed to update announcement'); } });
   const deleteMut = useMutation({ mutationFn: (id) => firebaseApi.entities.Announcement.delete(id), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); toast.success('Deleted'); } });
 
   const handleSave = () => {
-    if (!form.title || !form.content) return;
+    if (!form.title || !form.content) {
+      toast.error('Title and content are required');
+      return;
+    }
+    const optimisticId = editing === 'new' ? `pending-${Date.now()}` : editing;
+    qc.setQueryData(['admin-ann'], (current = []) => {
+      if (editing === 'new') {
+        return [{ id: optimisticId, ...form }, ...current];
+      }
+      return current.map((item) => (item.id === editing ? { ...item, ...form } : item));
+    });
+    setEditing(null);
     if (editing === 'new') createMut.mutate(form);
     else updateMut.mutate({ id: editing, data: form });
   };

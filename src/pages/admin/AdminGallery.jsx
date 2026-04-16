@@ -28,11 +28,13 @@ export default function AdminGallery() {
 
   const createMut = useMutation({
     mutationFn: (d) => firebaseApi.entities.GalleryItem.create(d),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-gallery'] }); setEditing(null); toast.success('Created'); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-gallery'] }); toast.success('Created'); },
+    onError: (error) => { toast.error(error?.message || 'Failed to save gallery item'); },
   });
   const updateMut = useMutation({
     mutationFn: ({ id, data }) => firebaseApi.entities.GalleryItem.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-gallery'] }); setEditing(null); toast.success('Updated'); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-gallery'] }); toast.success('Updated'); },
+    onError: (error) => { toast.error(error?.message || 'Failed to update gallery item'); },
   });
   const deleteMut = useMutation({
     mutationFn: (id) => firebaseApi.entities.GalleryItem.delete(id),
@@ -40,13 +42,25 @@ export default function AdminGallery() {
   });
 
   const handleSave = () => {
-    if (!form.title || !form.image_url || !form.caption) return;
+    if (!form.title || !form.image_url || !form.caption) {
+      toast.error('Title, caption, and image are required');
+      return;
+    }
     const payload = {
       ...form,
       tags: typeof form.tags === 'string'
         ? form.tags.split(',').map((tag) => tag.trim()).filter(Boolean)
         : form.tags,
     };
+    const optimisticId = editing === 'new' ? `pending-${Date.now()}` : editing;
+    queryClient.setQueryData(['admin-gallery'], (current = []) => {
+      if (editing === 'new') {
+        return [{ id: optimisticId, ...payload }, ...current];
+      }
+
+      return current.map((item) => (item.id === editing ? { ...item, ...payload } : item));
+    });
+    setEditing(null);
     if (editing === 'new') createMut.mutate(payload);
     else updateMut.mutate({ id: editing, data: payload });
   };

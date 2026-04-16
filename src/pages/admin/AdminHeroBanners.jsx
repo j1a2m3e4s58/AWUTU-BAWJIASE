@@ -209,11 +209,11 @@ export default function AdminHeroBanners() {
             variant="outline"
             onClick={handleReset}
             className="border-sidebar-border text-sidebar-foreground"
-            disabled={isLoading || saveMutation.isPending}
+            disabled={saveMutation.isPending}
           >
             Reset
           </Button>
-          <Button onClick={handleSave} disabled={isLoading || saveMutation.isPending}>
+          <Button onClick={handleSave} disabled={saveMutation.isPending}>
             {saveMutation.isPending ? 'Saving...' : 'Save Hero Banners'}
           </Button>
         </div>

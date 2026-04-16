@@ -28,13 +28,24 @@ export default function AdminEvents() {
     initialData: [],
   });
 
-  const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.CommunityEvent.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); setEditing(null); toast.success('Created'); } });
-  const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.CommunityEvent.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); setEditing(null); toast.success('Updated'); } });
+  const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.CommunityEvent.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); toast.success('Created'); }, onError: (error) => { toast.error(error?.message || 'Failed to save event'); } });
+  const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.CommunityEvent.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); toast.success('Updated'); }, onError: (error) => { toast.error(error?.message || 'Failed to update event'); } });
   const deleteMut = useMutation({ mutationFn: (id) => firebaseApi.entities.CommunityEvent.delete(id), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); toast.success('Deleted'); } });
 
   const handleSave = () => {
-    if (!form.title || !form.date) return;
+    if (!form.title || !form.date) {
+      toast.error('Title and start date are required');
+      return;
+    }
     const payload = { ...form, published: form.content_status === 'published' };
+    const optimisticId = editing === 'new' ? `pending-${Date.now()}` : editing;
+    qc.setQueryData(['admin-events'], (current = []) => {
+      if (editing === 'new') {
+        return [{ id: optimisticId, ...payload }, ...current];
+      }
+      return current.map((item) => (item.id === editing ? { ...item, ...payload } : item));
+    });
+    setEditing(null);
     if (editing === 'new') createMut.mutate(payload);
     else updateMut.mutate({ id: editing, data: payload });
   };

@@ -28,17 +28,28 @@ export default function AdminDocuments() {
     initialData: [],
   });
 
-  const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.ArchiveDocument.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); setEditing(null); toast.success('Created'); } });
-  const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.ArchiveDocument.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); setEditing(null); toast.success('Updated'); } });
+  const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.ArchiveDocument.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); toast.success('Created'); }, onError: (error) => { toast.error(error?.message || 'Failed to save document'); } });
+  const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.ArchiveDocument.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); toast.success('Updated'); }, onError: (error) => { toast.error(error?.message || 'Failed to update document'); } });
   const deleteMut = useMutation({ mutationFn: (id) => firebaseApi.entities.ArchiveDocument.delete(id), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); toast.success('Deleted'); } });
 
   const handleSave = () => {
-    if (!form.title || !form.file_url) return;
+    if (!form.title || !form.file_url) {
+      toast.error('Title and file are required');
+      return;
+    }
     const payload = {
       ...form,
       tags: typeof form.tags === 'string' ? form.tags.split(',').map((item) => item.trim()).filter(Boolean) : form.tags,
       published: form.content_status === 'published',
     };
+    const optimisticId = editing === 'new' ? `pending-${Date.now()}` : editing;
+    qc.setQueryData(['admin-docs'], (current = []) => {
+      if (editing === 'new') {
+        return [{ id: optimisticId, ...payload }, ...current];
+      }
+      return current.map((item) => (item.id === editing ? { ...item, ...payload } : item));
+    });
+    setEditing(null);
     if (editing === 'new') createMut.mutate(payload);
     else updateMut.mutate({ id: editing, data: payload });
   };
