@@ -358,5 +358,32 @@ export const firebaseApi = {
       }
       return normalizeDoc(snapshot);
     },
+    async getHeroBanners() {
+      if (!firebaseServices.db) {
+        return null;
+      }
+
+      const snapshot = await getDoc(doc(ensureFirestore(), 'siteSettings', 'hero-banners'));
+      return snapshot.exists() ? normalizeDoc(snapshot) : null;
+    },
+    async upsertHeroBanners(data) {
+      const reference = doc(ensureFirestore(), 'siteSettings', 'hero-banners');
+      await withTimeout(
+        setDoc(
+          reference,
+          {
+            ...data,
+            updated_date: serverTimestamp(),
+          },
+          { merge: true }
+        ),
+        'Hero banners save'
+      );
+      const snapshot = await withTimeout(getDoc(reference), 'Hero banners verification', 10000);
+      if (!snapshot.exists()) {
+        throw new Error('Hero banners did not save. Please try again.');
+      }
+      return normalizeDoc(snapshot);
+    },
   },
 };

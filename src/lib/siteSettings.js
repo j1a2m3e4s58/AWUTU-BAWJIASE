@@ -248,3 +248,59 @@ export const mergeSiteSettings = (defaults, incoming) => {
 
 export const getMergedPublicSettings = (incoming) =>
   mergeSiteSettings(DEFAULT_PUBLIC_SETTINGS, incoming || {});
+
+export const DEFAULT_HERO_BANNERS = {
+  home: {
+    heroImageUrl: '',
+  },
+  pages: Object.fromEntries(
+    Object.keys(DEFAULT_PUBLIC_SETTINGS.pages).map((pageKey) => [
+      pageKey,
+      { heroImageUrl: '' },
+    ])
+  ),
+};
+
+export const getMergedHeroBanners = (incoming) =>
+  mergeSiteSettings(DEFAULT_HERO_BANNERS, incoming || {});
+
+export const extractHeroBanners = (settings) => {
+  const merged = getMergedPublicSettings(settings);
+
+  return {
+    home: {
+      heroImageUrl: merged.home.heroImageUrl || '',
+    },
+    pages: Object.fromEntries(
+      Object.keys(DEFAULT_PUBLIC_SETTINGS.pages).map((pageKey) => [
+        pageKey,
+        {
+          heroImageUrl: merged.pages?.[pageKey]?.heroImageUrl || '',
+        },
+      ])
+    ),
+  };
+};
+
+export const applyHeroBannersToSettings = (settings, heroBanners) => {
+  const mergedSettings = getMergedPublicSettings(settings);
+  const mergedHeroes = getMergedHeroBanners(heroBanners);
+
+  return {
+    ...mergedSettings,
+    home: {
+      ...mergedSettings.home,
+      heroImageUrl: mergedHeroes.home.heroImageUrl || mergedSettings.home.heroImageUrl || '',
+    },
+    pages: Object.fromEntries(
+      Object.entries(mergedSettings.pages).map(([pageKey, pageSettings]) => [
+        pageKey,
+        {
+          ...pageSettings,
+          heroImageUrl:
+            mergedHeroes.pages?.[pageKey]?.heroImageUrl || pageSettings.heroImageUrl || '',
+        },
+      ])
+    ),
+  };
+};

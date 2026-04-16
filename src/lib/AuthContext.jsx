@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { firebaseApi, firebaseServices } from '@/api/firebaseClient';
-import { getMergedPublicSettings } from '@/lib/siteSettings';
+import { applyHeroBannersToSettings, getMergedPublicSettings } from '@/lib/siteSettings';
 
 const AuthContext = createContext();
 
@@ -24,8 +24,11 @@ export const AuthProvider = ({ children }) => {
     setIsLoadingPublicSettings(true);
 
     try {
-      const settings = await firebaseApi.siteSettings.getPublic();
-      setAppPublicSettings(getMergedPublicSettings(settings));
+      const [settings, heroBanners] = await Promise.all([
+        firebaseApi.siteSettings.getPublic(),
+        firebaseApi.siteSettings.getHeroBanners(),
+      ]);
+      setAppPublicSettings(applyHeroBannersToSettings(settings, heroBanners));
     } catch (error) {
       console.error('Failed to load public site settings:', error);
       setAppPublicSettings(getMergedPublicSettings(null));
@@ -34,8 +37,16 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const updatePublicSettingsCache = useCallback((settings) => {
-    setAppPublicSettings(getMergedPublicSettings(settings));
+  const updatePublicSettingsCache = useCallback((settings, heroBanners) => {
+    setAppPublicSettings((currentSettings) => {
+      const baseSettings = getMergedPublicSettings(settings);
+
+      if (heroBanners) {
+        return applyHeroBannersToSettings(baseSettings, heroBanners);
+      }
+
+      return applyHeroBannersToSettings(baseSettings, currentSettings);
+    });
   }, []);
 
   useEffect(() => {

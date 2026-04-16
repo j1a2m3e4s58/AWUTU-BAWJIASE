@@ -2,7 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ExternalLink, ImagePlus, Pencil, Sparkles, Trash2 } from 'lucide-react';
 import { firebaseApi } from '@/api/firebaseClient';
-import { getMergedPublicSettings } from '@/lib/siteSettings';
+import {
+  applyHeroBannersToSettings,
+  extractHeroBanners,
+  getMergedHeroBanners,
+  getMergedPublicSettings,
+} from '@/lib/siteSettings';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -29,6 +34,8 @@ const PAGE_FIELDS = [
   { key: 'privacy', label: 'Privacy' },
   { key: 'terms', label: 'Terms' },
 ];
+
+const HERO_BACKUP_KEY = 'awutu-hero-banners-backup';
 
 const deepSet = (source, path, value) => {
   const keys = path.split('.');
@@ -120,7 +127,24 @@ export default function AdminHeroBanners() {
     queryFn: () => firebaseApi.siteSettings.getPublic(),
   });
 
-  const mergedSettings = useMemo(() => getMergedPublicSettings(settings), [settings]);
+  const { data: heroBanners } = useQuery({
+    queryKey: ['admin-hero-banners'],
+    queryFn: () => firebaseApi.siteSettings.getHeroBanners(),
+  });
+
+  const backupHeroBanners = useMemo(() => {
+    try {
+      const rawBackup = window.localStorage.getItem(HERO_BACKUP_KEY);
+      return rawBackup ? JSON.parse(rawBackup) : null;
+    } catch {
+      return null;
+    }
+  }, [heroBanners]);
+
+  const mergedSettings = useMemo(
+    () => applyHeroBannersToSettings(settings, heroBanners || backupHeroBanners),
+    [settings, heroBanners, backupHeroBanners]
+  );
 
   useEffect(() => {
     setForm(mergedSettings);
@@ -131,13 +155,15 @@ export default function AdminHeroBanners() {
   }, []);
 
   const saveMutation = useMutation({
-    mutationFn: (payload) => firebaseApi.siteSettings.upsertPublic(payload),
+    mutationFn: (payload) => firebaseApi.siteSettings.upsertHeroBanners(extractHeroBanners(payload)),
     onSuccess: (data) => {
-      const normalized = getMergedPublicSettings(data);
-      queryClient.setQueryData(['admin-site-settings'], normalized);
-      queryClient.invalidateQueries({ queryKey: ['admin-site-settings'] });
-      setForm(normalized);
-      updatePublicSettingsCache(normalized);
+      const normalizedHeroes = getMergedHeroBanners(data);
+      const normalizedSettings = applyHeroBannersToSettings(settings, normalizedHeroes);
+      queryClient.setQueryData(['admin-hero-banners'], normalizedHeroes);
+      queryClient.invalidateQueries({ queryKey: ['admin-hero-banners'] });
+      setForm(normalizedSettings);
+      window.localStorage.setItem(HERO_BACKUP_KEY, JSON.stringify(normalizedHeroes));
+      updatePublicSettingsCache(settings, normalizedHeroes);
       refreshPublicSettings().catch((error) => {
         console.error('Background public settings refresh failed:', error);
       });
@@ -158,6 +184,8 @@ export default function AdminHeroBanners() {
   };
 
   const handleSave = () => {
+    const heroBackup = extractHeroBanners(form);
+    window.localStorage.setItem(HERO_BACKUP_KEY, JSON.stringify(heroBackup));
     saveMutation.mutate(form);
   };
 
