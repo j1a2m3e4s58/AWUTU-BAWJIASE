@@ -58,6 +58,13 @@ export default function AdminEvents() {
       }
       return current.map((item) => (item.id === editing ? { ...item, ...payload } : item));
     });
+    qc.setQueryData(['events'], (current = []) => {
+      if (!payload.published) return current;
+      if (editing === 'new') {
+        return [{ id: optimisticId, ...payload }, ...current];
+      }
+      return current.map((item) => (item.id === editing ? { ...item, ...payload } : item));
+    });
     setEditing(null);
     if (editing === 'new') createMut.mutate(payload);
     else updateMut.mutate({ id: editing, data: payload });

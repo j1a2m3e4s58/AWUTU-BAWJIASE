@@ -55,6 +55,13 @@ export default function AdminAnnouncements() {
       }
       return current.map((item) => (item.id === editing ? { ...item, ...form } : item));
     });
+    qc.setQueryData(['announcements'], (current = []) => {
+      if (!form.published) return current;
+      if (editing === 'new') {
+        return [{ id: optimisticId, ...form }, ...current];
+      }
+      return current.map((item) => (item.id === editing ? { ...item, ...form } : item));
+    });
     setEditing(null);
     if (editing === 'new') createMut.mutate(form);
     else updateMut.mutate({ id: editing, data: form });

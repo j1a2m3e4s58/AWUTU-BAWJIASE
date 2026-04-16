@@ -98,6 +98,13 @@ export default function AdminTraining() {
       }
       return [{ id: optimisticId, ...payload }, ...current];
     });
+    queryClient.setQueryData(['training-videos'], (current = []) => {
+      if (!payload.published) return current;
+      if (editing) {
+        return current.map((item) => (item.id === editing.id ? { ...item, ...payload } : item));
+      }
+      return [{ id: optimisticId, ...payload }, ...current];
+    });
     closeDialog();
     if (editing) {
       updateMutation.mutate({ id: editing.id, data: payload });

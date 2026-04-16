@@ -49,7 +49,7 @@ const normalizeList = (value) => (Array.isArray(value) ? value : []);
 
 export default function AdminSiteSettings() {
   const queryClient = useQueryClient();
-  const { refreshPublicSettings } = useAuth();
+  const { refreshPublicSettings, updatePublicSettingsCache } = useAuth();
   const [form, setForm] = useState(() => getMergedPublicSettings(null));
 
   const { data: settings, isLoading } = useQuery({
@@ -70,6 +70,7 @@ export default function AdminSiteSettings() {
       queryClient.setQueryData(['admin-site-settings'], normalized);
       queryClient.invalidateQueries({ queryKey: ['admin-site-settings'] });
       setForm(normalized);
+      updatePublicSettingsCache(normalized);
       refreshPublicSettings().catch((error) => {
         console.error('Background public settings refresh failed:', error);
       });
@@ -90,6 +91,7 @@ export default function AdminSiteSettings() {
   };
 
   const handleSave = () => {
+    updatePublicSettingsCache(getMergedPublicSettings(form));
     saveMutation.mutate(form);
   };
 

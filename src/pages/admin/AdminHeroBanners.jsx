@@ -110,7 +110,7 @@ const HeroQuickCard = ({ title, subtitle, imageUrl, isActive, onEdit, onClear, p
 
 export default function AdminHeroBanners() {
   const queryClient = useQueryClient();
-  const { refreshPublicSettings } = useAuth();
+  const { refreshPublicSettings, updatePublicSettingsCache } = useAuth();
   const [form, setForm] = useState(() => getMergedPublicSettings(null));
   const [selectedHero, setSelectedHero] = useState('home');
   const [searchTerm, setSearchTerm] = useState('');
@@ -137,6 +137,7 @@ export default function AdminHeroBanners() {
       queryClient.setQueryData(['admin-site-settings'], normalized);
       queryClient.invalidateQueries({ queryKey: ['admin-site-settings'] });
       setForm(normalized);
+      updatePublicSettingsCache(normalized);
       refreshPublicSettings().catch((error) => {
         console.error('Background public settings refresh failed:', error);
       });
@@ -157,6 +158,7 @@ export default function AdminHeroBanners() {
   };
 
   const handleSave = () => {
+    updatePublicSettingsCache(getMergedPublicSettings(form));
     saveMutation.mutate(form);
   };
 

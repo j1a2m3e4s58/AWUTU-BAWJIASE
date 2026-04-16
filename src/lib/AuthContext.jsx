@@ -34,6 +34,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const updatePublicSettingsCache = useCallback((settings) => {
+    setAppPublicSettings(getMergedPublicSettings(settings));
+  }, []);
+
   useEffect(() => {
     refreshPublicSettings();
   }, [refreshPublicSettings]);
@@ -143,6 +147,7 @@ export const AuthProvider = ({ children }) => {
       authError,
       appPublicSettings,
       refreshPublicSettings,
+      updatePublicSettingsCache,
       logout,
       navigateToLogin,
       checkAppState
