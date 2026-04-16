@@ -155,12 +155,23 @@ export default function AdminHeroBanners() {
   }, []);
 
   const saveMutation = useMutation({
-    mutationFn: (payload) => firebaseApi.siteSettings.upsertHeroBanners(extractHeroBanners(payload)),
+    mutationFn: async (payload) => {
+      const heroPayload = extractHeroBanners(payload);
+      const [heroResult] = await Promise.all([
+        firebaseApi.siteSettings.upsertHeroBanners(heroPayload),
+        firebaseApi.siteSettings.upsertPublic(heroPayload),
+      ]);
+      return heroResult;
+    },
     onSuccess: (data) => {
       const normalizedHeroes = getMergedHeroBanners(data);
       const normalizedSettings = applyHeroBannersToSettings(settings, normalizedHeroes);
       queryClient.setQueryData(['admin-hero-banners'], normalizedHeroes);
+      queryClient.setQueryData(['admin-site-settings'], (currentSettings) =>
+        applyHeroBannersToSettings(currentSettings || settings, normalizedHeroes)
+      );
       queryClient.invalidateQueries({ queryKey: ['admin-hero-banners'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-site-settings'] });
       setForm(normalizedSettings);
       window.localStorage.setItem(HERO_BACKUP_KEY, JSON.stringify(normalizedHeroes));
       updatePublicSettingsCache(settings, normalizedHeroes);

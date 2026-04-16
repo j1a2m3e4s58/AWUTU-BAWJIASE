@@ -264,18 +264,35 @@ export const DEFAULT_HERO_BANNERS = {
 export const getMergedHeroBanners = (incoming) =>
   mergeSiteSettings(DEFAULT_HERO_BANNERS, incoming || {});
 
+export const normalizeImageUrl = (value) => {
+  const url = String(value || '').trim();
+  if (!url) return '';
+
+  const driveFileMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveFileMatch) {
+    return `https://drive.google.com/thumbnail?id=${driveFileMatch[1]}&sz=w2000`;
+  }
+
+  const driveIdMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (driveIdMatch) {
+    return `https://drive.google.com/thumbnail?id=${driveIdMatch[1]}&sz=w2000`;
+  }
+
+  return url;
+};
+
 export const extractHeroBanners = (settings) => {
   const merged = getMergedPublicSettings(settings);
 
   return {
     home: {
-      heroImageUrl: merged.home.heroImageUrl || '',
+      heroImageUrl: normalizeImageUrl(merged.home.heroImageUrl),
     },
     pages: Object.fromEntries(
       Object.keys(DEFAULT_PUBLIC_SETTINGS.pages).map((pageKey) => [
         pageKey,
         {
-          heroImageUrl: merged.pages?.[pageKey]?.heroImageUrl || '',
+          heroImageUrl: normalizeImageUrl(merged.pages?.[pageKey]?.heroImageUrl),
         },
       ])
     ),
