@@ -1,4 +1,4 @@
-const CACHE_NAME = 'awutu-bawjiase-shell-v2';
+const CACHE_NAME = 'awutu-bawjiase-shell-v3';
 const APP_SHELL = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -20,7 +20,15 @@ self.addEventListener('fetch', (event) => {
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match('/index.html').then((cached) => cached || caches.match('/')))
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.ok) {
+            return response;
+          }
+
+          return caches.match('/index.html').then((cached) => cached || caches.match('/'));
+        })
+        .catch(() => caches.match('/index.html').then((cached) => cached || caches.match('/')))
     );
     return;
   }

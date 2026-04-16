@@ -38,8 +38,8 @@ export default function MediaUploader({ value, onChange, accept = 'image/*', lab
       } else if (mediaType === 'file') {
         return `https://drive.google.com/uc?export=download&id=${fileId}`;
       } else {
-        // Use direct download URL for images
-        return `https://drive.google.com/uc?export=view&id=${fileId}`;
+        // Use the thumbnail endpoint for images because it previews more reliably than the view URL
+        return `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`;
       }
     }
     // Also handle: https://drive.google.com/open?id=FILE_ID
@@ -51,7 +51,7 @@ export default function MediaUploader({ value, onChange, accept = 'image/*', lab
       } else if (mediaType === 'file') {
         return `https://drive.google.com/uc?export=download&id=${fileId}`;
       } else {
-        return `https://drive.google.com/uc?export=view&id=${fileId}`;
+        return `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`;
       }
     }
     return input;
@@ -154,7 +154,7 @@ export default function MediaUploader({ value, onChange, accept = 'image/*', lab
           <p className="text-xs text-sidebar-foreground/60">
             Share your file via Google Drive → Share → "Anyone with the link" → paste link above.
           </p>
-          {value && value.includes('drive.google.com') && (
+          {value && (value.includes('drive.google.com') || value.includes('googleusercontent.com')) && (
             <p className="text-xs text-green-600 truncate">✓ Drive link applied</p>
           )}
         </div>
