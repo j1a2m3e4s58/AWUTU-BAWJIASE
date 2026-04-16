@@ -36,7 +36,7 @@ export default function PublicLayout() {
           </div>
         </div>
       )}
-      <main className="relative z-10 flex-1 pb-32 md:pb-0">
+      <main className="relative z-10 flex-1 pb-36 md:pb-0">
         <Outlet />
       </main>
       <PublicFooter />

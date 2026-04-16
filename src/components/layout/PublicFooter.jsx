@@ -37,7 +37,7 @@ export default function PublicFooter() {
   };
   return (
     <footer className="border-t border-border/50 bg-card/75 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-16 pb-36 md:py-16 lg:py-24">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-16 pb-40 md:py-16 lg:py-24">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-1">
             <div className="flex items-center gap-3 mb-4">

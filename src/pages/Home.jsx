@@ -101,7 +101,7 @@ export default function Home() {
               <p className="mt-5 text-muted-foreground text-base sm:text-lg lg:text-xl leading-relaxed max-w-lg">
                 {(lang === 'twi' ? homeSettings.description_twi : homeSettings.description) || t('homeHeroDesc')}
               </p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+              <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <Link
                   to="/memorial"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-sm text-sm font-medium tracking-wide hover:bg-primary/90 transition-colors"

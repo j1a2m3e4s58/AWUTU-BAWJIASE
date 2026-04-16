@@ -16,10 +16,10 @@ export default function MobileBottomNav() {
   const { t } = useLanguage();
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-3 pb-[calc(env(safe-area-inset-bottom,0px)+0.45rem)] pt-2 md:hidden">
-      <div className="pointer-events-auto mx-auto max-w-md overflow-hidden border border-border/45 bg-background/42 shadow-[0_18px_45px_-30px_rgba(0,0,0,0.7)] backdrop-blur-2xl">
-        <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/55 to-transparent" />
-        <nav className="grid grid-cols-5 items-end gap-1.5 px-2 py-1.5">
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 md:hidden">
+      <div className="pointer-events-auto overflow-hidden border-t border-border/50 bg-background/72 shadow-[0_-12px_32px_-26px_rgba(0,0,0,0.88)] backdrop-blur-2xl">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/55 to-transparent" />
+        <nav className="grid grid-cols-5 items-end gap-1 px-2 pt-1.5 pb-[calc(env(safe-area-inset-bottom,0px)+0.45rem)]">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
 
@@ -27,7 +27,7 @@ export default function MobileBottomNav() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative flex min-h-[3.7rem] flex-col items-center justify-center gap-1 px-0.5 py-1.5 text-[0.52rem] uppercase tracking-[0.1em] transition-all duration-200 ${
+                className={`relative flex min-h-[3.45rem] flex-col items-center justify-center gap-0.5 px-0.5 py-1 text-[0.5rem] uppercase tracking-[0.08em] transition-all duration-200 ${
                   isActive ? 'text-primary' : 'text-foreground/82'
                 }`}
               >
