@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
-const emptyContent = { title: '', content: '', section: 'community_history', story_type: '', timeline_date: '', order: 0, image_url: '', featured: false, content_status: 'draft', published: false };
+const emptyContent = { title: '', content: '', section: 'community_history', story_type: '', timeline_date: '', order: 0, image_url: '', featured: false, content_status: 'published', published: true };
 
 export default function AdminHistory() {
   const [editing, setEditing] = useState(null);

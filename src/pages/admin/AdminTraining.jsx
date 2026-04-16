@@ -21,7 +21,7 @@ const INITIAL = {
   thumbnail_url: '',
   category: 'other',
   duration: '',
-  published: false,
+  published: true,
   featured: false,
   order: 0,
 };

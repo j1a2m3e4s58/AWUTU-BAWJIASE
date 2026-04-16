@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import MediaUploader from '../../components/shared/MediaUploader';
 import BilingualFieldHelper from '@/components/admin/BilingualFieldHelper';
 
-const emptyItem = { title: '', title_twi: '', caption: '', caption_twi: '', description: '', description_twi: '', album: '', tags: '', featured: false, image_url: '', category: 'other', published: false };
+const emptyItem = { title: '', title_twi: '', caption: '', caption_twi: '', description: '', description_twi: '', album: '', tags: '', featured: false, image_url: '', category: 'other', published: true };
 
 export default function AdminGallery() {
   const [editing, setEditing] = useState(null);

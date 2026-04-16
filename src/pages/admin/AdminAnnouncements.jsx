@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import MediaUploader from '../../components/shared/MediaUploader';
 import BilingualFieldHelper from '@/components/admin/BilingualFieldHelper';
 
-const empty = { title: '', title_twi: '', content: '', content_twi: '', attachment_url: '', category: 'general', published: false, pinned: false };
+const empty = { title: '', title_twi: '', content: '', content_twi: '', attachment_url: '', category: 'general', published: true, pinned: false };
 
 export default function AdminAnnouncements() {
   const [editing, setEditing] = useState(null);

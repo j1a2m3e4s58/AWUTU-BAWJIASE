@@ -14,7 +14,7 @@ import BilingualFieldHelper from '@/components/admin/BilingualFieldHelper';
 
 const empty = {
   title: '', title_twi: '', description: '', description_twi: '', preview_text: '', preview_text_twi: '', file_url: '', cover_image_url: '', document_date: '', download_label: '',
-  tags: '', category: 'other', featured: false, content_status: 'draft', published: false,
+  tags: '', category: 'other', featured: false, content_status: 'published', published: true,
 };
 
 export default function AdminDocuments() {

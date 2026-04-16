@@ -14,7 +14,7 @@ import BilingualFieldHelper from '@/components/admin/BilingualFieldHelper';
 
 const empty = {
   title: '', title_twi: '', description: '', description_twi: '', date: '', end_date: '', location: '', venue: '', organizer: '', dress_code: '', contact_person: '', contact_phone: '',
-  featured_image_url: '', category: 'community', featured: false, content_status: 'draft', published: false,
+  featured_image_url: '', category: 'community', featured: false, content_status: 'published', published: true,
 };
 
 export default function AdminEvents() {

@@ -15,7 +15,7 @@ const emptyKing = {
   name: '', title: '', photo_url: '', biography: '', reign_start: '', reign_end: '',
   birth_date: '', death_date: '', achievements: [], family_line: '', status: 'deceased',
   role_group: 'king', stool_role: '', summary: '', lineage_link: '', gallery_ids: '', related_event_ids: '', related_announcement_ids: '',
-  order: 0, is_late_king: false, featured: false, content_status: 'draft', published: false,
+  order: 0, is_late_king: false, featured: false, content_status: 'published', published: true,
 };
 
 export default function AdminKings() {
