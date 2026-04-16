@@ -38,7 +38,17 @@ export default function AdminGallery() {
   });
   const deleteMut = useMutation({
     mutationFn: (id) => firebaseApi.entities.GalleryItem.delete(id),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ['admin-gallery'] });
+      const previousItems = queryClient.getQueryData(['admin-gallery']);
+      queryClient.setQueryData(['admin-gallery'], (current = []) => current.filter((item) => item.id !== id));
+      return { previousItems };
+    },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-gallery'] }); toast.success('Deleted'); },
+    onError: (error, _id, context) => {
+      if (context?.previousItems) queryClient.setQueryData(['admin-gallery'], context.previousItems);
+      toast.error(error?.message || 'Failed to delete gallery item');
+    },
   });
 
   const handleSave = () => {

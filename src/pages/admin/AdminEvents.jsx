@@ -30,7 +30,20 @@ export default function AdminEvents() {
 
   const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.CommunityEvent.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); toast.success('Created'); }, onError: (error) => { toast.error(error?.message || 'Failed to save event'); } });
   const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.CommunityEvent.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); toast.success('Updated'); }, onError: (error) => { toast.error(error?.message || 'Failed to update event'); } });
-  const deleteMut = useMutation({ mutationFn: (id) => firebaseApi.entities.CommunityEvent.delete(id), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); toast.success('Deleted'); } });
+  const deleteMut = useMutation({
+    mutationFn: (id) => firebaseApi.entities.CommunityEvent.delete(id),
+    onMutate: async (id) => {
+      await qc.cancelQueries({ queryKey: ['admin-events'] });
+      const previousItems = qc.getQueryData(['admin-events']);
+      qc.setQueryData(['admin-events'], (current = []) => current.filter((item) => item.id !== id));
+      return { previousItems };
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); toast.success('Deleted'); },
+    onError: (error, _id, context) => {
+      if (context?.previousItems) qc.setQueryData(['admin-events'], context.previousItems);
+      toast.error(error?.message || 'Failed to delete event');
+    },
+  });
 
   const handleSave = () => {
     if (!form.title || !form.date) {

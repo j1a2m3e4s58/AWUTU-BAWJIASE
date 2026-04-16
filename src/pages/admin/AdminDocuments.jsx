@@ -30,7 +30,20 @@ export default function AdminDocuments() {
 
   const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.ArchiveDocument.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); toast.success('Created'); }, onError: (error) => { toast.error(error?.message || 'Failed to save document'); } });
   const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.ArchiveDocument.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); toast.success('Updated'); }, onError: (error) => { toast.error(error?.message || 'Failed to update document'); } });
-  const deleteMut = useMutation({ mutationFn: (id) => firebaseApi.entities.ArchiveDocument.delete(id), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); toast.success('Deleted'); } });
+  const deleteMut = useMutation({
+    mutationFn: (id) => firebaseApi.entities.ArchiveDocument.delete(id),
+    onMutate: async (id) => {
+      await qc.cancelQueries({ queryKey: ['admin-docs'] });
+      const previousItems = qc.getQueryData(['admin-docs']);
+      qc.setQueryData(['admin-docs'], (current = []) => current.filter((item) => item.id !== id));
+      return { previousItems };
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-docs'] }); toast.success('Deleted'); },
+    onError: (error, _id, context) => {
+      if (context?.previousItems) qc.setQueryData(['admin-docs'], context.previousItems);
+      toast.error(error?.message || 'Failed to delete document');
+    },
+  });
 
   const handleSave = () => {
     if (!form.title || !form.file_url) {

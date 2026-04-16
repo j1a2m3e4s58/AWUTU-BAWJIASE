@@ -28,7 +28,20 @@ export default function AdminAnnouncements() {
 
   const createMut = useMutation({ mutationFn: (d) => firebaseApi.entities.Announcement.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); toast.success('Created'); }, onError: (error) => { toast.error(error?.message || 'Failed to save announcement'); } });
   const updateMut = useMutation({ mutationFn: ({ id, data }) => firebaseApi.entities.Announcement.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); toast.success('Updated'); }, onError: (error) => { toast.error(error?.message || 'Failed to update announcement'); } });
-  const deleteMut = useMutation({ mutationFn: (id) => firebaseApi.entities.Announcement.delete(id), onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); toast.success('Deleted'); } });
+  const deleteMut = useMutation({
+    mutationFn: (id) => firebaseApi.entities.Announcement.delete(id),
+    onMutate: async (id) => {
+      await qc.cancelQueries({ queryKey: ['admin-ann'] });
+      const previousItems = qc.getQueryData(['admin-ann']);
+      qc.setQueryData(['admin-ann'], (current = []) => current.filter((item) => item.id !== id));
+      return { previousItems };
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-ann'] }); toast.success('Deleted'); },
+    onError: (error, _id, context) => {
+      if (context?.previousItems) qc.setQueryData(['admin-ann'], context.previousItems);
+      toast.error(error?.message || 'Failed to delete announcement');
+    },
+  });
 
   const handleSave = () => {
     if (!form.title || !form.content) {

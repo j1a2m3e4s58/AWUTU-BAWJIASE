@@ -61,7 +61,17 @@ export default function AdminTraining() {
 
   const deleteMutation = useMutation({
     mutationFn: (id) => firebaseApi.entities.TrainingVideo.delete(id),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ['admin-training'] });
+      const previousItems = queryClient.getQueryData(['admin-training']);
+      queryClient.setQueryData(['admin-training'], (current = []) => current.filter((item) => item.id !== id));
+      return { previousItems };
+    },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-training'] }); toast.success('Video deleted'); },
+    onError: (error, _id, context) => {
+      if (context?.previousItems) queryClient.setQueryData(['admin-training'], context.previousItems);
+      toast.error(error?.message || 'Failed to delete video');
+    },
   });
 
   const togglePublish = (video) => {

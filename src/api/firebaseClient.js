@@ -78,6 +78,16 @@ const ensureStorage = () => {
   return firebaseServices.storage;
 };
 
+const withTimeout = (promise, label = 'Firebase request', timeoutMs = 15000) =>
+  Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`${label} took too long. Please check your connection and Firebase permissions.`));
+      }, timeoutMs);
+    }),
+  ]);
+
 const toIsoString = (value) => {
   if (!value) return value;
   if (typeof value?.toDate === 'function') {
@@ -205,7 +215,7 @@ const createEntityApi = (entityName) => {
 
     async create(data) {
       const payload = prepareForWrite(data, true);
-      const reference = await addDoc(getCollectionRef(), payload);
+      const reference = await withTimeout(addDoc(getCollectionRef(), payload), `${entityName} save`);
       return {
         id: reference.id,
         ...normalizeData(data),
@@ -214,7 +224,7 @@ const createEntityApi = (entityName) => {
 
     async update(id, data) {
       const reference = doc(ensureFirestore(), getCollectionName(entityName), id);
-      await updateDoc(reference, prepareForWrite(data));
+      await withTimeout(updateDoc(reference, prepareForWrite(data)), `${entityName} update`);
       return {
         id,
         ...normalizeData(data),
@@ -222,7 +232,7 @@ const createEntityApi = (entityName) => {
     },
 
     async delete(id) {
-      await deleteDoc(doc(ensureFirestore(), getCollectionName(entityName), id));
+      await withTimeout(deleteDoc(doc(ensureFirestore(), getCollectionName(entityName), id)), `${entityName} delete`);
       return { success: true };
     },
   };
@@ -265,11 +275,11 @@ const loadCurrentUserProfile = async () => {
 };
 
 const uploadFile = async ({ file, folder = 'public/uploads' }) => {
-  const storage = ensureStorage();
-  const safeName = `${Date.now()}-${file.name}`.replace(/\s+/g, '-');
-  const storageRef = ref(storage, `${folder}/${safeName}`);
-  await uploadBytes(storageRef, file);
-  const fileUrl = await getDownloadURL(storageRef);
+      const storage = ensureStorage();
+      const safeName = `${Date.now()}-${file.name}`.replace(/\s+/g, '-');
+      const storageRef = ref(storage, `${folder}/${safeName}`);
+  await withTimeout(uploadBytes(storageRef, file), 'File upload', 30000);
+  const fileUrl = await withTimeout(getDownloadURL(storageRef), 'File URL lookup', 15000);
   return { file_url: fileUrl };
 };
 
@@ -331,13 +341,16 @@ export const firebaseApi = {
     },
     async upsertPublic(data) {
       const reference = doc(ensureFirestore(), 'siteSettings', 'public-site');
-      await setDoc(
-        reference,
-        {
-          ...data,
-          updated_date: serverTimestamp(),
-        },
-        { merge: true }
+      await withTimeout(
+        setDoc(
+          reference,
+          {
+            ...data,
+            updated_date: serverTimestamp(),
+          },
+          { merge: true }
+        ),
+        'Site settings save'
       );
       return {
         id: 'public-site',
