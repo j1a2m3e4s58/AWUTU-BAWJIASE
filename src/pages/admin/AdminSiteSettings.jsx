@@ -91,7 +91,6 @@ export default function AdminSiteSettings() {
   };
 
   const handleSave = () => {
-    updatePublicSettingsCache(getMergedPublicSettings(form));
     saveMutation.mutate(form);
   };
 

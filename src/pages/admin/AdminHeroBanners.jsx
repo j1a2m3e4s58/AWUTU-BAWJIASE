@@ -158,7 +158,6 @@ export default function AdminHeroBanners() {
   };
 
   const handleSave = () => {
-    updatePublicSettingsCache(getMergedPublicSettings(form));
     saveMutation.mutate(form);
   };
 
@@ -276,6 +275,9 @@ export default function AdminHeroBanners() {
                 accept="image/*"
                 mediaType="image"
               />
+              <p className="text-xs leading-5 text-sidebar-foreground/55">
+                This page saves the image URL only. The image file stays on Google Drive or the original website, but the URL must be saved here so the public site remembers it after refresh.
+              </p>
               <div>
                 <Label className="text-sidebar-foreground/70">Current Image URL</Label>
                 <Input

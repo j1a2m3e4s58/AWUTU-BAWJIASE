@@ -352,10 +352,11 @@ export const firebaseApi = {
         ),
         'Site settings save'
       );
-      return {
-        id: 'public-site',
-        ...normalizeData(data),
-      };
+      const snapshot = await withTimeout(getDoc(reference), 'Site settings verification', 10000);
+      if (!snapshot.exists()) {
+        throw new Error('Site settings did not save. Please try again.');
+      }
+      return normalizeDoc(snapshot);
     },
   },
 };
