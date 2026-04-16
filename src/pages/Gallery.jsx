@@ -1,0 +1,256 @@
+import React, { useState } from 'react';
+import { firebaseApi } from '@/api/firebaseClient';
+import { useQuery } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Image, MessageSquare } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import PageHero from '../components/shared/PageHero';
+import CommentThread from '@/components/shared/CommentThread';
+import { useLanguage } from '@/lib/LanguageContext';
+import { getLocalizedField } from '@/lib/localizedContent';
+
+const ARTIFACTS_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/bffc1cf8d_generated_64e10ec5.png';
+
+export default function Gallery() {
+  const { t, lang } = useLanguage();
+  const [category, setCategory] = useState('all');
+  const [album, setAlbum] = useState('all');
+  const [activeTag, setActiveTag] = useState('all');
+  const [lightbox, setLightbox] = useState(null);
+
+  const { data: items, isLoading } = useQuery({
+    queryKey: ['gallery'],
+    queryFn: () => firebaseApi.entities.GalleryItem.filter({ published: true }, '-created_date'),
+    initialData: [],
+  });
+  const { data: comments = [] } = useQuery({
+    queryKey: ['gallery-comments-counts'],
+    queryFn: () => firebaseApi.entities.Comment.filter({ target_type: 'gallery_item', published: true, moderation_status: 'approved' }),
+    initialData: [],
+  });
+
+  const albums = ['all', ...new Set(items.map((item) => item.album).filter(Boolean))];
+  const tags = ['all', ...new Set(items.flatMap((item) => item.tags || []).filter(Boolean))];
+  const filtered = items.filter((item) => {
+    const matchesCategory = category === 'all' || item.category === category;
+    const matchesAlbum = album === 'all' || item.album === album;
+    const matchesTag = activeTag === 'all' || (item.tags || []).includes(activeTag);
+    return matchesCategory && matchesAlbum && matchesTag;
+  });
+  const sorted = [...filtered].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
+  const featuredItems = sorted.filter((item) => item.featured).slice(0, 3);
+  const commentCounts = comments.reduce((acc, comment) => {
+    acc[comment.target_id] = (acc[comment.target_id] || 0) + 1;
+    return acc;
+  }, {});
+
+  return (
+    <div>
+      <PageHero
+        label={t('galleryLabel')}
+        title={t('galleryTitle')}
+        description={t('galleryDesc')}
+        imageUrl={ARTIFACTS_IMAGE}
+        pageKey="gallery"
+      />
+
+      <section className="py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          {featuredItems.length > 0 && (
+            <div className="surface-panel rounded-sm p-6 lg:p-8 mb-10">
+              <div className="flex items-center justify-between gap-4 mb-6">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-primary font-medium">{t('featuredMoments')}</p>
+                  <h2 className="font-display text-2xl lg:text-3xl font-semibold text-foreground mt-2">
+                    {t('highlightedImages')}
+                  </h2>
+                </div>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  {t('galleryFeaturedDesc')}
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                {featuredItems.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className="group text-left"
+                    onClick={() => setLightbox(item)}
+                  >
+                    <div className="aspect-[4/3] overflow-hidden rounded-sm bg-muted">
+                      <img
+                        src={item.image_url}
+                        alt={getLocalizedField(item, 'title', lang)}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="mt-3 flex items-center justify-between gap-3">
+                      <p className="font-medium text-sm text-foreground">{getLocalizedField(item, 'title', lang)}</p>
+                      <span className="text-[11px] uppercase tracking-[0.18em] text-primary">{t('featured')}</span>
+                    </div>
+                    {(item.caption || item.description) && (
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{getLocalizedField(item, 'caption', lang) || getLocalizedField(item, 'description', lang)}</p>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-4 mb-8">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.24em] text-primary font-medium">{t('galleryFilterLabel')}</p>
+                <h2 className="font-display text-2xl font-semibold text-foreground mt-2">{t('browseAlbumTags')}</h2>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="w-full sm:w-48 bg-card">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('allCategories2')}</SelectItem>
+                    <SelectItem value="royal_portraits">Royal Portraits</SelectItem>
+                    <SelectItem value="ceremonies">Ceremonies</SelectItem>
+                    <SelectItem value="community">Community</SelectItem>
+                    <SelectItem value="historical">Historical</SelectItem>
+                    <SelectItem value="funeral">Funeral</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={album} onValueChange={setAlbum}>
+                  <SelectTrigger className="w-full sm:w-52 bg-card">
+                    <SelectValue placeholder="All Albums" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {albums.map((itemAlbum) => (
+                      <SelectItem key={itemAlbum} value={itemAlbum}>
+                        {itemAlbum === 'all' ? t('allAlbums') : itemAlbum}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {tags.length > 1 && (
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setActiveTag(tag)}
+                    className={`px-3 py-1.5 text-xs uppercase tracking-[0.16em] border transition-colors ${
+                      activeTag === tag
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : 'border-border text-muted-foreground hover:border-primary/60 hover:text-foreground'
+                    }`}
+                  >
+                    {tag === 'all' ? t('allTags') : tag}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="aspect-square bg-muted animate-pulse rounded-sm" />
+              ))}
+            </div>
+          ) : sorted.length === 0 ? (
+            <div className="text-center py-20">
+              <Image className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
+              <p className="text-muted-foreground">{t('noImages')}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sorted.map((item, i) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.05 }}
+                  className="group cursor-pointer"
+                  onClick={() => setLightbox(item)}
+                >
+                  <div className="aspect-square overflow-hidden rounded-sm bg-muted">
+                    <img
+                      src={item.image_url}
+                      alt={getLocalizedField(item, 'title', lang)}
+                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 grayscale-[30%] group-hover:grayscale-0"
+                    />
+                  </div>
+                  <div className="mt-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-medium">{getLocalizedField(item, 'title', lang)}</p>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        {item.featured && <span className="text-primary">{t('featured')}</span>}
+                        <span className="inline-flex items-center gap-1">
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          {commentCounts[item.id] || 0}
+                        </span>
+                      </div>
+                    </div>
+                    {(item.caption || item.description) && (
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{getLocalizedField(item, 'caption', lang) || getLocalizedField(item, 'description', lang)}</p>
+                    )}
+                    {item.album && (
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-primary mt-2">{item.album}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground capitalize">
+                      {item.category?.replace(/_/g, ' ')}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-foreground/90 flex items-center justify-center p-6"
+            onClick={() => setLightbox(null)}
+          >
+            <button
+              onClick={() => setLightbox(null)}
+              className="absolute top-6 right-6 text-background/80 hover:text-background"
+            >
+              <X className="w-8 h-8" />
+            </button>
+            <div
+              className="max-w-5xl w-full max-h-[90vh] overflow-y-auto rounded-3xl bg-background shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <motion.img
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                src={lightbox.image_url}
+                alt={getLocalizedField(lightbox, 'title', lang)}
+                className="w-full max-h-[65vh] object-contain bg-foreground/5"
+              />
+              <div className="p-6">
+                <p className="text-foreground font-display text-2xl">{getLocalizedField(lightbox, 'title', lang)}</p>
+                {(getLocalizedField(lightbox, 'caption', lang) || getLocalizedField(lightbox, 'description', lang)) && (
+                  <p className="text-muted-foreground text-sm mt-2 leading-6">{getLocalizedField(lightbox, 'caption', lang) || getLocalizedField(lightbox, 'description', lang)}</p>
+                )}
+                <CommentThread targetType="gallery_item" targetId={lightbox.id} title={t('imageComments')} />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

@@ -1,0 +1,58 @@
+{
+  "name": "HistoryContent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "section": {
+      "type": "string",
+      "enum": [
+        "community_history",
+        "about",
+        "funeral_info",
+        "heritage_story"
+      ],
+      "default": "community_history"
+    },
+    "story_type": {
+      "type": "string"
+    },
+    "timeline_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "content_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "published": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "section"
+  ]
+}

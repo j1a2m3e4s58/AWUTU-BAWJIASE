@@ -1,0 +1,71 @@
+{
+  "name": "ArchiveDocument",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "preview_text": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "cover_image_url": {
+      "type": "string"
+    },
+    "document_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "download_label": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "royal_decree",
+        "historical",
+        "genealogy",
+        "ceremony",
+        "legal",
+        "chieftaincy_record",
+        "funeral_programme",
+        "public_notice",
+        "forms",
+        "other"
+      ],
+      "default": "other"
+    },
+    "content_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "published": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "file_url"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "SiteSettings",
+  "type": "object",
+  "properties": {
+    "siteName": {
+      "type": "string",
+      "description": "Public site name shown in the header, footer, and metadata."
+    },
+    "siteTagline": {
+      "type": "string",
+      "description": "Short public summary of the website."
+    },
+    "header": {
+      "type": "object",
+      "description": "Header display settings."
+    },
+    "footer": {
+      "type": "object",
+      "description": "Footer content and policy labels."
+    },
+    "contact": {
+      "type": "object",
+      "description": "Public contact details shown across the site."
+    },
+    "home": {
+      "type": "object",
+      "description": "Homepage hero content."
+    },
+    "pages": {
+      "type": "object",
+      "description": "Shared page hero labels, titles, and descriptions."
+    }
+  }
+}

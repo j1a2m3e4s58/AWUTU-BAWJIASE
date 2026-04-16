@@ -1,0 +1,49 @@
+{
+  "name": "GalleryItem",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "album": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "royal_portraits",
+        "ceremonies",
+        "community",
+        "historical",
+        "funeral",
+        "other"
+      ],
+      "default": "other"
+    },
+    "published": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "image_url",
+    "caption"
+  ]
+}

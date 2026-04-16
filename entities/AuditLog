@@ -1,0 +1,33 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string"
+    },
+    "actor_name": {
+      "type": "string"
+    },
+    "actor_email": {
+      "type": "string"
+    },
+    "target_type": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "action",
+    "target_type",
+    "target_id",
+    "summary"
+  ]
+}

@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: 'Cormorant Garamond', serif;
+    --font-sans: 'Inter', sans-serif;
+
+    --background: 35 38% 95%;
+    --foreground: 20 20% 15%;
+    --card: 36 38% 98%;
+    --card-foreground: 20 20% 15%;
+    --popover: 36 38% 98%;
+    --popover-foreground: 20 20% 15%;
+    --primary: 29 42% 38%;
+    --primary-foreground: 36 38% 97%;
+    --secondary: 32 26% 90%;
+    --secondary-foreground: 20 20% 15%;
+    --muted: 34 24% 91%;
+    --muted-foreground: 202 14% 36%;
+    --accent: 168 19% 35%;
+    --accent-foreground: 36 38% 97%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 32 22% 82%;
+    --input: 32 22% 82%;
+    --ring: 29 42% 38%;
+    --chart-1: 29 42% 38%;
+    --chart-2: 168 19% 35%;
+    --chart-3: 18 44% 58%;
+    --chart-4: 20 20% 15%;
+    --chart-5: 35 18% 76%;
+    --radius: 0rem;
+
+    --sidebar-background: 220 20% 10%;
+    --sidebar-foreground: 220 10% 85%;
+    --sidebar-primary: 38 38% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 18%;
+    --sidebar-accent-foreground: 220 10% 85%;
+    --sidebar-border: 220 15% 20%;
+    --sidebar-ring: 38 38% 50%;
+  }
+
+  .dark {
+    --background: 220 20% 8%;
+    --foreground: 36 33% 92%;
+    --card: 220 20% 10%;
+    --card-foreground: 36 33% 92%;
+    --popover: 220 20% 10%;
+    --popover-foreground: 36 33% 92%;
+    --primary: 38 45% 55%;
+    --primary-foreground: 220 20% 8%;
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 36 33% 92%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 38 45% 55%;
+    --accent-foreground: 220 20% 8%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 38 45% 55%;
+    --chart-1: 38 45% 55%;
+    --chart-2: 200 10% 55%;
+    --chart-3: 36 33% 40%;
+    --chart-4: 36 33% 92%;
+    --chart-5: 220 15% 30%;
+
+    --sidebar-background: 220 25% 6%;
+    --sidebar-foreground: 220 10% 85%;
+    --sidebar-primary: 38 45% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 12%;
+    --sidebar-accent-foreground: 220 10% 85%;
+    --sidebar-border: 220 15% 15%;
+    --sidebar-ring: 38 45% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background-image:
+      radial-gradient(circle at top left, hsl(35 56% 88% / 0.7), transparent 32%),
+      radial-gradient(circle at top right, hsl(168 30% 88% / 0.45), transparent 28%),
+      linear-gradient(180deg, hsl(var(--background)), hsl(33 34% 93%));
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+    color: hsl(var(--foreground));
+  }
+  #root {
+    min-height: 100vh;
+  }
+  img {
+    color: transparent;
+  }
+}
+
+@layer components {
+  .surface-panel {
+    @apply border border-border/60 bg-card backdrop-blur-sm shadow-[0_24px_80px_-40px_rgba(87,63,31,0.35)];
+  }
+}
+
+@media (max-width: 640px) {
+  .surface-panel {
+    box-shadow: 0 18px 54px -38px rgba(87, 63, 31, 0.45);
+  }
+
+  section {
+    scroll-margin-top: 5rem;
+  }
+}
+
+@layer base {
+  .rounded,
+  .rounded-sm,
+  .rounded-md,
+  .rounded-lg,
+  .rounded-xl,
+  .rounded-2xl,
+  .rounded-3xl,
+  .rounded-\[2rem\] {
+    border-radius: 0 !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}

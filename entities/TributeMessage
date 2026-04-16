@@ -1,0 +1,23 @@
+{
+  "name": "TributeMessage",
+  "type": "object",
+  "properties": {
+    "author_name": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "king_id": {
+      "type": "string"
+    },
+    "published": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "author_name",
+    "message"
+  ]
+}

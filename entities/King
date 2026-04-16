@@ -1,0 +1,141 @@
+{
+  "name": "King",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Full name of the king"
+    },
+    "title": {
+      "type": "string",
+      "description": "Royal title"
+    },
+    "role_group": {
+      "type": "string",
+      "enum": [
+        "king",
+        "chief",
+        "queen_mother",
+        "elder",
+        "council_member",
+        "important_figure"
+      ],
+      "default": "king"
+    },
+    "stool_role": {
+      "type": "string",
+      "description": "Specific stool, office, or community role"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short profile summary used on public cards"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "URL to king's portrait photo"
+    },
+    "biography": {
+      "type": "string",
+      "description": "Full biography text"
+    },
+    "reign_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Start of reign"
+    },
+    "reign_end": {
+      "type": "string",
+      "format": "date",
+      "description": "End of reign (empty if current)"
+    },
+    "birth_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "death_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of key achievements"
+    },
+    "family_line": {
+      "type": "string",
+      "description": "Royal family line description"
+    },
+    "lineage_link": {
+      "type": "string",
+      "description": "Public route or related lineage reference"
+    },
+    "predecessor_id": {
+      "type": "string",
+      "description": "ID of predecessor king"
+    },
+    "successor_id": {
+      "type": "string",
+      "description": "ID of successor king"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "reigning",
+        "deceased",
+        "abdicated",
+        "future"
+      ],
+      "default": "deceased"
+    },
+    "order": {
+      "type": "number",
+      "description": "Order in the lineage"
+    },
+    "is_late_king": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is the recently deceased king being memorialized"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "gallery_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related_announcement_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "content_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "published": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "status"
+  ]
+}

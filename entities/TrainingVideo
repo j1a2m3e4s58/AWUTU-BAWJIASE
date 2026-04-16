@@ -1,0 +1,61 @@
+{
+    "name": "TrainingVideo",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Title of the training video"
+      },
+      "description": {
+        "type": "string",
+        "description": "Description of the training content"
+      },
+      "video_url": {
+        "type": "string",
+        "description": "URL to the video (direct URL, uploaded file, or Google Drive link)"
+      },
+      "thumbnail_url": {
+        "type": "string",
+        "description": "Thumbnail image URL"
+      },
+      "album": {
+        "type": "string"
+      },
+      "tags": {
+        "type": "array"
+      },
+      "featured": {
+        "type": "boolean",
+        "default": false
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "royal_protocol",
+          "history",
+          "culture",
+          "ceremony",
+          "community",
+          "other"
+        ],
+        "default": "other",
+        "description": "Category of training content"
+      },
+      "duration": {
+        "type": "string",
+        "description": "Duration of video e.g. 12:30"
+      },
+      "published": {
+        "type": "boolean",
+        "default": false
+      },
+      "order": {
+        "type": "number",
+        "default": 0
+      }
+    },
+    "required": [
+      "title",
+      "video_url"
+    ]
+  }

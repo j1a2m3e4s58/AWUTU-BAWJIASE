@@ -1,0 +1,38 @@
+{
+  "name": "Announcement",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "attachment_url": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "funeral",
+        "royal",
+        "community",
+        "urgent"
+      ],
+      "default": "general"
+    },
+    "published": {
+      "type": "boolean",
+      "default": false
+    },
+    "pinned": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}

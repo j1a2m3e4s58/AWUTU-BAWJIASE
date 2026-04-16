@@ -1,0 +1,89 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isPublished() {
+      return resource.data.published == true;
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) || isAdmin();
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /announcements/{documentId} {
+      allow read: if isPublished() || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /archiveDocuments/{documentId} {
+      allow read: if isPublished() || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /communityEvents/{documentId} {
+      allow read: if isPublished() || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /galleryItems/{documentId} {
+      allow read: if isPublished() || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /historyContents/{documentId} {
+      allow read: if isPublished() || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /kings/{documentId} {
+      allow read: if isPublished() || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /trainingVideos/{documentId} {
+      allow read: if isPublished() || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /comments/{documentId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    match /auditLogs/{documentId} {
+      allow read, create, update, delete: if isAdmin();
+    }
+
+    match /siteSettings/{documentId} {
+      allow read: if documentId == 'public-site' || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /tributeMessages/{documentId} {
+      allow read: if isPublished() || isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    match /contactMessages/{documentId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

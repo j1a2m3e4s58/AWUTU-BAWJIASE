@@ -1,0 +1,80 @@
+{
+  "name": "CommunityEvent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "location": {
+      "type": "string"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "organizer": {
+      "type": "string"
+    },
+    "dress_code": {
+      "type": "string"
+    },
+    "contact_person": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "featured_image_url": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "string"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "funeral",
+        "ceremony",
+        "community",
+        "royal",
+        "memorial",
+        "festival",
+        "meeting",
+        "durbur",
+        "public_notice"
+      ],
+      "default": "community"
+    },
+    "content_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "published": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "date"
+  ]
+}
