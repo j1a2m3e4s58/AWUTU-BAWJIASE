@@ -132,13 +132,19 @@ export default function AdminHeroBanners() {
 
   const saveMutation = useMutation({
     mutationFn: (payload) => firebaseApi.siteSettings.upsertPublic(payload),
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       const normalized = getMergedPublicSettings(data);
       queryClient.setQueryData(['admin-site-settings'], normalized);
       queryClient.invalidateQueries({ queryKey: ['admin-site-settings'] });
-      await refreshPublicSettings();
       setForm(normalized);
+      refreshPublicSettings().catch((error) => {
+        console.error('Background public settings refresh failed:', error);
+      });
       toast.success('Hero banners saved');
+    },
+    onError: (error) => {
+      console.error('Hero banner save failed:', error);
+      toast.error(error?.message || 'Failed to save hero banners');
     },
   });
 

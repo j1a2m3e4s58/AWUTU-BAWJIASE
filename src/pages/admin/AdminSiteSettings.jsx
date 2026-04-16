@@ -65,13 +65,19 @@ export default function AdminSiteSettings() {
 
   const saveMutation = useMutation({
     mutationFn: (payload) => firebaseApi.siteSettings.upsertPublic(payload),
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       const normalized = getMergedPublicSettings(data);
       queryClient.setQueryData(['admin-site-settings'], normalized);
       queryClient.invalidateQueries({ queryKey: ['admin-site-settings'] });
-      await refreshPublicSettings();
-      toast.success('Site settings saved');
       setForm(normalized);
+      refreshPublicSettings().catch((error) => {
+        console.error('Background public settings refresh failed:', error);
+      });
+      toast.success('Site settings saved');
+    },
+    onError: (error) => {
+      console.error('Site settings save failed:', error);
+      toast.error(error?.message || 'Failed to save site settings');
     },
   });
 
