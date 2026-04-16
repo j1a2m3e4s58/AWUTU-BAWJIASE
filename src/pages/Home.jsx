@@ -9,6 +9,7 @@ import { useLanguage } from '@/lib/LanguageContext';
 import Seo from '@/components/shared/Seo';
 import { useAuth } from '@/lib/AuthContext';
 import HeroBackdrop from '@/components/shared/HeroBackdrop';
+import { getMergedHeroBanners, normalizeImageUrl } from '@/lib/siteSettings';
 
 const KING_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/dc37adcaa_generated_e3452ee4.png';
 const ARTIFACTS_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/bffc1cf8d_generated_64e10ec5.png';
@@ -25,6 +26,16 @@ export default function Home() {
   const { appPublicSettings } = useAuth();
   const homeSettings = appPublicSettings?.home || {};
   const homeSections = homeSettings?.sections || {};
+  const { data: heroBanners } = useQuery({
+    queryKey: ['public-hero-banners'],
+    queryFn: () => firebaseApi.siteSettings.getHeroBanners(),
+    staleTime: 0,
+    refetchOnMount: 'always',
+    initialData: null,
+  });
+  const homepageHeroImageUrl = normalizeImageUrl(
+    getMergedHeroBanners(heroBanners).home.heroImageUrl || homeSettings.heroImageUrl
+  );
   const { data: lateKing } = useQuery({
     queryKey: ['lateKing'],
     queryFn: () => firebaseApi.entities.King.filter({ is_late_king: true, published: true }),
@@ -80,7 +91,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative min-h-[92svh] lg:min-h-screen flex items-center pt-16 lg:pt-0 overflow-hidden">
         <HeroBackdrop
-          imageUrl={homeSettings.heroImageUrl}
+          imageUrl={homepageHeroImageUrl}
           overlayClassName="bg-gradient-to-r from-background via-background/90 to-background/40"
         />
 
