@@ -206,15 +206,19 @@ const createEntityApi = (entityName) => {
     async create(data) {
       const payload = prepareForWrite(data, true);
       const reference = await addDoc(getCollectionRef(), payload);
-      const snapshot = await getDoc(reference);
-      return normalizeDoc(snapshot);
+      return {
+        id: reference.id,
+        ...normalizeData(data),
+      };
     },
 
     async update(id, data) {
       const reference = doc(ensureFirestore(), getCollectionName(entityName), id);
       await updateDoc(reference, prepareForWrite(data));
-      const snapshot = await getDoc(reference);
-      return normalizeDoc(snapshot);
+      return {
+        id,
+        ...normalizeData(data),
+      };
     },
 
     async delete(id) {
@@ -335,8 +339,10 @@ export const firebaseApi = {
         },
         { merge: true }
       );
-      const snapshot = await getDoc(reference);
-      return snapshot.exists() ? normalizeDoc(snapshot) : null;
+      return {
+        id: 'public-site',
+        ...normalizeData(data),
+      };
     },
   },
 };
