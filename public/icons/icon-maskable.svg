@@ -1,5 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#0d1117"/>
-  <circle cx="256" cy="256" r="188" fill="#131a23" stroke="#b88b4a" stroke-width="12"/>
-  <path d="M256 144l44 25 47-20 19 55h35v29h-35l-16 103H162l-16-103h-35v-29h35l19-55 47 20 44-25zm0 47l-28 16-34-14-8 20h140l-8-20-34 14-28-16zm-62 50l9 67h106l9-67H194z" fill="#d4af74"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Awutu Bawjiase Community crown">
+  <defs>
+    <radialGradient id="bg" cx="34%" cy="22%" r="76%">
+      <stop offset="0" stop-color="#263445"/>
+      <stop offset="0.48" stop-color="#101722"/>
+      <stop offset="1" stop-color="#070a10"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="132" y1="112" x2="380" y2="392">
+      <stop offset="0" stop-color="#fff1bc"/>
+      <stop offset="0.3" stop-color="#d9ae54"/>
+      <stop offset="0.62" stop-color="#9a6427"/>
+      <stop offset="1" stop-color="#f0ce7a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="150" fill="#111a25" stroke="#c89543" stroke-width="8" opacity="0.92"/>
+  <path fill="url(#gold)" d="M144 330h224l18-132-58 26-29-82-43 70-43-70-29 82-58-26 18 132Zm30-35-7-52 42 18 18-50 29 51 29-51 18 50 42-18-7 52H174Z"/>
+  <rect x="162" y="342" width="188" height="32" fill="url(#gold)"/>
+  <circle cx="256" cy="151" r="12" fill="#f8dc88"/>
+  <circle cx="214" cy="224" r="10" fill="#f3c569"/>
+  <circle cx="298" cy="224" r="10" fill="#f3c569"/>
 </svg>

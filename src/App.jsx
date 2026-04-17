@@ -57,6 +57,7 @@ import AdminMediaLibrary from './pages/admin/AdminMediaLibrary';
 import AdminBackups from './pages/admin/AdminBackups';
 import AdminHeroBanners from './pages/admin/AdminHeroBanners';
 import AdminLogin from './pages/admin/AdminLogin';
+import AppLaunchCrest from '@/components/shared/AppLaunchCrest';
 
 const ScrollToTop = () => {
   const { pathname, search, hash } = useLocation();
@@ -169,6 +170,7 @@ function App() {
               <AuthenticatedApp />
             </Router>
             <Toaster />
+            <AppLaunchCrest />
           </QueryClientProvider>
         </LanguageProvider>
       </AdminAccessProvider>

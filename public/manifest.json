@@ -1,13 +1,37 @@
 {
   "name": "Awutu Bawjiase Community",
-  "short_name": "Awutu",
-  "description": "Royal heritage, memorial archives, events, gallery, and community records for Awutu Bawjiase.",
+  "short_name": "Bawjiase",
+  "description": "A royal heritage platform for Awutu Bawjiase community history, memorial archives, events, gallery, videos, and public records.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0d1117",
-  "theme_color": "#b88b4a",
+  "background_color": "#090d14",
+  "theme_color": "#0b0f16",
   "orientation": "portrait-primary",
+  "categories": ["education", "lifestyle", "news"],
+  "shortcuts": [
+    {
+      "name": "Gallery",
+      "short_name": "Gallery",
+      "description": "Open community images and albums.",
+      "url": "/gallery",
+      "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Events",
+      "short_name": "Events",
+      "description": "Open community events.",
+      "url": "/events",
+      "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Contact",
+      "short_name": "Contact",
+      "description": "Open contact details.",
+      "url": "/contact",
+      "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.svg",
