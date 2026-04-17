@@ -14,6 +14,14 @@ const navItems = [
 export default function MobileBottomNav() {
   const location = useLocation();
   const { t } = useLanguage();
+  const scrollToTop = () => {
+    window.setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      document.scrollingElement?.scrollTo?.(0, 0);
+    }, 0);
+  };
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 md:hidden">
@@ -27,6 +35,7 @@ export default function MobileBottomNav() {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={scrollToTop}
                 className={`relative flex min-h-[3.45rem] flex-col items-center justify-center gap-0.5 px-0.5 py-1 text-[0.5rem] uppercase tracking-[0.08em] transition-all duration-200 ${
                   isActive ? 'text-primary' : 'text-foreground/82'
                 }`}

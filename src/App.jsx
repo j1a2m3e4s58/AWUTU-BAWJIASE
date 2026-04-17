@@ -56,6 +56,39 @@ import AdminMediaLibrary from './pages/admin/AdminMediaLibrary';
 import AdminBackups from './pages/admin/AdminBackups';
 import AdminHeroBanners from './pages/admin/AdminHeroBanners';
 import AdminLogin from './pages/admin/AdminLogin';
+
+const ScrollToTop = () => {
+  const { pathname, search, hash } = useLocation();
+
+  React.useLayoutEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    if (hash) {
+      return;
+    }
+
+    const scrollToPageTop = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      document.scrollingElement?.scrollTo?.(0, 0);
+    };
+
+    scrollToPageTop();
+    const frame = window.requestAnimationFrame(scrollToPageTop);
+    const timeout = window.setTimeout(scrollToPageTop, 80);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
+  }, [pathname, search, hash]);
+
+  return null;
+};
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
   const location = useLocation();
@@ -131,6 +164,7 @@ function App() {
         <LanguageProvider>
           <QueryClientProvider client={queryClientInstance}>
             <Router>
+              <ScrollToTop />
               <AuthenticatedApp />
             </Router>
             <Toaster />
