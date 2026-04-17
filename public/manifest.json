@@ -1,6 +1,7 @@
 {
   "name": "Awutu Bawjiase Community",
   "short_name": "Bawjiase",
+  "id": "/",
   "description": "A royal heritage platform for Awutu Bawjiase community history, memorial archives, events, gallery, videos, and public records.",
   "start_url": "/",
   "scope": "/",
