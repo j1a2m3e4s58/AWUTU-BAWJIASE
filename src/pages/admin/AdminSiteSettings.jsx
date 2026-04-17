@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { useAuth } from '@/lib/AuthContext';
 import BilingualFieldHelper from '@/components/admin/BilingualFieldHelper';
+import MediaUploader from '@/components/shared/MediaUploader';
 
 const PAGE_FIELDS = [
   { key: 'about', label: 'About' },
@@ -407,9 +408,21 @@ export default function AdminSiteSettings() {
         <section className="rounded-xl border border-sidebar-border bg-sidebar-accent p-6 space-y-4">
           <div>
             <h3 className="font-display text-xl text-sidebar-foreground">Memorial Programme</h3>
-            <p className="text-sm text-sidebar-foreground/60">Manage obituary text, burial and thanksgiving details, family acknowledgements, and the downloadable programme file.</p>
+            <p className="text-sm text-sidebar-foreground/60">Manage the memorial hero image, obituary text, burial and thanksgiving details, family acknowledgements, and the downloadable programme file.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
+            <div className="md:col-span-2">
+              <MediaUploader
+                label="Memorial Hero Image"
+                value={form.memorial.heroImageUrl || ''}
+                onChange={(url) => updateField('memorial.heroImageUrl', url)}
+                accept="image/*"
+                mediaType="image"
+              />
+              <p className="mt-2 text-xs text-sidebar-foreground/55">
+                This image replaces the large portrait on the Memorial page. If empty, the page uses the late king photo from Leadership Manager, then the default image.
+              </p>
+            </div>
             <div className="md:col-span-2">
               <Label className="text-sidebar-foreground/70">Programme Section Title</Label>
               <Input value={form.memorial.obituaryTitle} onChange={(event) => updateField('memorial.obituaryTitle', event.target.value)} className="bg-sidebar border-sidebar-border text-sidebar-foreground" />

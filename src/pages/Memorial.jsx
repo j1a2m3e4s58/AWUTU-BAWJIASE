@@ -12,6 +12,7 @@ import SectionHeader from '../components/shared/SectionHeader';
 import ShareButtons from '../components/shared/ShareButtons';
 import Seo from '@/components/shared/Seo';
 import { useAuth } from '@/lib/AuthContext';
+import { normalizeImageUrl } from '@/lib/siteSettings';
 
 const KING_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/dc37adcaa_generated_e3452ee4.png';
 
@@ -46,6 +47,7 @@ export default function Memorial() {
   });
 
   const king = kings[0];
+  const memorialHeroImageUrl = normalizeImageUrl(memorialSettings.heroImageUrl || king?.photo_url || KING_IMAGE);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -103,7 +105,7 @@ export default function Memorial() {
             >
               <div className="aspect-[3/4] max-w-md mx-auto rounded-sm overflow-hidden shadow-2xl">
                 <img
-                  src={king?.photo_url || KING_IMAGE}
+                  src={memorialHeroImageUrl}
                   alt={king?.name || 'The Late King'}
                   className="w-full h-full object-cover"
                 />

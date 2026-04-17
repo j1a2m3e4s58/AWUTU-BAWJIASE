@@ -66,6 +66,7 @@ export const DEFAULT_PUBLIC_SETTINGS = {
   },
   memorial: {
     obituaryTitle: 'In Loving Memory',
+    heroImageUrl: '',
     obituaryText: '',
     burialDetails: '',
     thanksgivingDetails: '',
