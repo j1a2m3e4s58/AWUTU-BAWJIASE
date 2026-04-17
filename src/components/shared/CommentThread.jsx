@@ -36,14 +36,14 @@ function CommentForm({ onSubmit, isPending, submitLabel = 'Post Comment', compac
         value={form.author_name}
         onChange={(event) => setForm((current) => ({ ...current, author_name: event.target.value }))}
         placeholder="Your name"
-        className="bg-card/80"
+        className="border-border/70 bg-background/70 text-foreground placeholder:text-muted-foreground"
       />
       <Textarea
         value={form.content}
         onChange={(event) => setForm((current) => ({ ...current, content: event.target.value }))}
         placeholder="Write a respectful comment..."
         rows={compact ? 3 : 4}
-        className="bg-card/80"
+        className="border-border/70 bg-background/70 text-foreground placeholder:text-muted-foreground"
       />
       <Button type="submit" disabled={isPending}>
         {isPending ? 'Sending...' : submitLabel}
@@ -54,7 +54,7 @@ function CommentForm({ onSubmit, isPending, submitLabel = 'Post Comment', compac
 
 function CommentItem({ comment, replies, onReply, isPending, activeReplyId, setActiveReplyId }) {
   return (
-    <div className="rounded-2xl border border-border/60 bg-card/70 p-4">
+    <div className="border border-border/60 bg-background/55 p-4">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -96,7 +96,7 @@ function CommentItem({ comment, replies, onReply, isPending, activeReplyId, setA
       {replies.length > 0 && (
         <div className="mt-4 space-y-3 border-l border-border/70 pl-4">
           {replies.map((reply) => (
-            <div key={reply.id} className="rounded-xl bg-background/60 p-3">
+            <div key={reply.id} className="bg-card/70 p-3">
               <div className="flex items-center gap-2">
                 <p className="text-sm font-semibold text-foreground">{reply.author_name}</p>
                 {reply.is_admin && (
@@ -209,7 +209,7 @@ export default function CommentThread({ targetType, targetId, title = 'Comments'
           />
         ))}
         {rootComments.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-border/70 p-6 text-center text-sm text-muted-foreground">
+          <div className="border border-dashed border-border/70 bg-background/35 p-6 text-center text-sm text-muted-foreground">
             No comments yet. Be the first to contribute respectfully.
           </div>
         )}

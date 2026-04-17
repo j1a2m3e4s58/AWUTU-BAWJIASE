@@ -219,17 +219,17 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-foreground/90 flex items-center justify-center p-6"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/82 p-4 backdrop-blur-md sm:p-6"
             onClick={() => setLightbox(null)}
           >
             <button
               onClick={() => setLightbox(null)}
-              className="absolute top-6 right-6 text-background/80 hover:text-background"
+              className="absolute right-4 top-4 z-10 border border-white/10 bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:text-white sm:right-6 sm:top-6"
             >
               <X className="w-8 h-8" />
             </button>
             <div
-              className="max-w-5xl w-full max-h-[90vh] overflow-y-auto rounded-3xl bg-background shadow-2xl"
+              className="w-full max-w-5xl max-h-[90vh] overflow-y-auto border border-border/60 bg-card text-card-foreground shadow-2xl shadow-black/50"
               onClick={(e) => e.stopPropagation()}
             >
               <motion.img
@@ -238,7 +238,7 @@ export default function Gallery() {
                 exit={{ scale: 0.9, opacity: 0 }}
                 src={lightbox.image_url}
                 alt={getLocalizedField(lightbox, 'title', lang)}
-                className="w-full max-h-[65vh] object-contain bg-foreground/5"
+                className="w-full max-h-[65vh] object-contain bg-black/45"
               />
               <div className="p-6">
                 <p className="text-foreground font-display text-2xl">{getLocalizedField(lightbox, 'title', lang)}</p>
