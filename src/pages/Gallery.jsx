@@ -8,6 +8,7 @@ import PageHero from '../components/shared/PageHero';
 import CommentThread from '@/components/shared/CommentThread';
 import { useLanguage } from '@/lib/LanguageContext';
 import { getLocalizedField } from '@/lib/localizedContent';
+import { usePreloadImages } from '@/hooks/usePreloadImages';
 
 const ARTIFACTS_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/bffc1cf8d_generated_64e10ec5.png';
 
@@ -39,6 +40,7 @@ export default function Gallery() {
   });
   const sorted = [...filtered].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
   const featuredItems = sorted.filter((item) => item.featured).slice(0, 3);
+  usePreloadImages(sorted.map((item) => item.image_url), 12);
   const commentCounts = comments.reduce((acc, comment) => {
     acc[comment.target_id] = (acc[comment.target_id] || 0) + 1;
     return acc;

@@ -8,6 +8,7 @@ import PageHero from '../components/shared/PageHero';
 import { useLanguage } from '@/lib/LanguageContext';
 import Seo from '@/components/shared/Seo';
 import { getLocalizedField } from '@/lib/localizedContent';
+import { usePreloadImages } from '@/hooks/usePreloadImages';
 
 export default function Events() {
   const { t, lang } = useLanguage();
@@ -29,6 +30,7 @@ export default function Events() {
   }, {});
   const upcomingByMonth = groupByMonth(upcoming);
   const pastByMonth = groupByMonth(past);
+  usePreloadImages([featured?.featured_image_url], 1);
 
   return (
     <div>

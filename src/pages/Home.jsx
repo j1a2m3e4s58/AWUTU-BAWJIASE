@@ -10,6 +10,7 @@ import Seo from '@/components/shared/Seo';
 import { useAuth } from '@/lib/AuthContext';
 import HeroBackdrop from '@/components/shared/HeroBackdrop';
 import { getMergedHeroBanners, normalizeImageUrl } from '@/lib/siteSettings';
+import { usePreloadImages } from '@/hooks/usePreloadImages';
 
 const KING_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/dc37adcaa_generated_e3452ee4.png';
 const ARTIFACTS_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/bffc1cf8d_generated_64e10ec5.png';
@@ -81,6 +82,13 @@ export default function Home() {
   const featuredDocuments = (documents.filter((item) => item.featured).length > 0 ? documents.filter((item) => item.featured) : documents).slice(0, 3);
   const nextEvent = events.find((event) => event.date && new Date(event.date) >= new Date()) || events[0];
   const pinnedAnnouncement = announcements[0];
+  usePreloadImages([
+    homepageHeroImageUrl,
+    king?.photo_url,
+    ...featuredLeaders.map((leader) => leader.photo_url),
+    ...featuredGallery.map((item) => item.image_url),
+    ...featuredVideos.map((video) => video.thumbnail_url),
+  ], 12);
 
   return (
     <div>

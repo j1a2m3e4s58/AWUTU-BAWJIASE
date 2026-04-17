@@ -8,6 +8,35 @@ import {
 } from '@/lib/siteSettings';
 
 const AuthContext = createContext();
+const PUBLIC_SETTINGS_CACHE_KEY = 'awutu-public-settings-cache-v1';
+const PUBLIC_SETTINGS_CACHE_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
+
+const loadCachedPublicSettings = () => {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const cached = JSON.parse(localStorage.getItem(PUBLIC_SETTINGS_CACHE_KEY) || 'null');
+    if (!cached?.settings || !cached.cachedAt) return null;
+    if (Date.now() - cached.cachedAt > PUBLIC_SETTINGS_CACHE_MAX_AGE) return null;
+    return cached.settings;
+  } catch {
+    localStorage.removeItem(PUBLIC_SETTINGS_CACHE_KEY);
+    return null;
+  }
+};
+
+const saveCachedPublicSettings = (settings) => {
+  if (typeof window === 'undefined' || !settings) return;
+
+  try {
+    localStorage.setItem(
+      PUBLIC_SETTINGS_CACHE_KEY,
+      JSON.stringify({ settings, cachedAt: Date.now() })
+    );
+  } catch {
+    // Storage is only a speed helper; Firebase remains the source of truth.
+  }
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -16,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
   const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(false);
   const [authError, setAuthError] = useState(null);
-  const [appPublicSettings, setAppPublicSettings] = useState(null);
+  const [appPublicSettings, setAppPublicSettings] = useState(() => loadCachedPublicSettings());
 
   const refreshPublicSettings = useCallback(async () => {
     if (!firebaseServices.db) {
@@ -44,7 +73,9 @@ export const AuthProvider = ({ children }) => {
         console.error('Failed to load hero banners:', heroBannersResult.reason);
       }
 
-      setAppPublicSettings(applyHeroBannersToSettings(settings, heroBanners));
+      const mergedPublicSettings = applyHeroBannersToSettings(settings, heroBanners);
+      setAppPublicSettings(mergedPublicSettings);
+      saveCachedPublicSettings(mergedPublicSettings);
     } catch (error) {
       console.error('Failed to load public site settings:', error);
       setAppPublicSettings(getMergedPublicSettings(null));
@@ -56,12 +87,16 @@ export const AuthProvider = ({ children }) => {
   const updatePublicSettingsCache = useCallback((settings, heroBanners) => {
     setAppPublicSettings((currentSettings) => {
       const baseSettings = getMergedPublicSettings(settings);
+      let mergedSettings;
 
       if (heroBanners) {
-        return applyHeroBannersToSettings(baseSettings, getMergedHeroBanners(heroBanners));
+        mergedSettings = applyHeroBannersToSettings(baseSettings, getMergedHeroBanners(heroBanners));
+      } else {
+        mergedSettings = applyHeroBannersToSettings(baseSettings, currentSettings);
       }
 
-      return applyHeroBannersToSettings(baseSettings, currentSettings);
+      saveCachedPublicSettings(mergedSettings);
+      return mergedSettings;
     });
   }, []);
 

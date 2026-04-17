@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Seo from '@/components/shared/Seo';
 import CommentThread from '@/components/shared/CommentThread';
 import { getLocalizedField } from '@/lib/localizedContent';
+import { usePreloadImages } from '@/hooks/usePreloadImages';
 
 const CATEGORY_LABELS = {
   royal_protocol: 'Royal Protocol',
@@ -72,6 +73,7 @@ export default function Training() {
   const sortedVideos = [...filtered].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)) || (a.order ?? 0) - (b.order ?? 0));
   const featuredVideo = sortedVideos.find((video) => video.featured) ?? sortedVideos[0] ?? videos[0] ?? null;
   const featuredCollection = sortedVideos.filter((video) => video.featured).slice(0, 3);
+  usePreloadImages(sortedVideos.map((video) => video.thumbnail_url), 10);
   const commentCounts = comments.reduce((acc, comment) => {
     acc[comment.target_id] = (acc[comment.target_id] || 0) + 1;
     return acc;

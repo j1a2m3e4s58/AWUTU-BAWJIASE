@@ -13,6 +13,7 @@ import ShareButtons from '../components/shared/ShareButtons';
 import Seo from '@/components/shared/Seo';
 import { useAuth } from '@/lib/AuthContext';
 import { normalizeImageUrl } from '@/lib/siteSettings';
+import { usePreloadImages } from '@/hooks/usePreloadImages';
 
 const KING_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/dc37adcaa_generated_e3452ee4.png';
 
@@ -48,6 +49,7 @@ export default function Memorial() {
 
   const king = kings[0];
   const memorialHeroImageUrl = normalizeImageUrl(memorialSettings.heroImageUrl || king?.photo_url || KING_IMAGE);
+  usePreloadImages([memorialHeroImageUrl], 1);
 
   const handleSubmit = (e) => {
     e.preventDefault();
