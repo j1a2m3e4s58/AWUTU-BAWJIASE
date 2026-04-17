@@ -19,21 +19,25 @@ if (typeof window !== 'undefined') {
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
+      window.setTimeout(() => {
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         registrations.forEach((registration) => {
           registration.unregister().catch(() => {})
         })
       }).catch(() => {})
+      }, 3000)
     })
   }
 
   if ('caches' in window) {
     window.addEventListener('load', () => {
+      window.setTimeout(() => {
       caches.keys().then((keys) => {
         keys.forEach((key) => {
           caches.delete(key).catch(() => {})
         })
       }).catch(() => {})
+      }, 3000)
     })
   }
 }

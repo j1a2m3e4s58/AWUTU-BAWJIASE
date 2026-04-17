@@ -48,62 +48,10 @@
         background: transparent;
       }
 
-      .app-first-paint {
-        min-height: 100vh;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding: 4.5rem 1.5rem;
-        box-sizing: border-box;
-        font-family: Georgia, 'Times New Roman', serif;
-        color: #efe7d8;
-      }
-
-      .app-first-paint__brand {
-        width: min(100%, 72rem);
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-        opacity: 0.92;
-      }
-
-      .app-first-paint__mark {
-        width: 2.8rem;
-        height: 2.8rem;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(184, 139, 74, 0.34);
-        background: rgba(184, 139, 74, 0.12);
-        color: #d6ad63;
-      }
-
-      .app-first-paint__title {
-        margin: 0;
-        font-size: clamp(1.1rem, 4vw, 1.5rem);
-        line-height: 1.1;
-      }
-
-      .app-first-paint__subtitle {
-        margin: 0.25rem 0 0;
-        font: 0.64rem/1.2 system-ui, sans-serif;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        color: rgba(239, 231, 216, 0.54);
-      }
     </style>
   </head>
   <body>
-    <div id="root">
-      <div class="app-first-paint" aria-hidden="true">
-        <div class="app-first-paint__brand">
-          <div class="app-first-paint__mark">A</div>
-          <div>
-            <p class="app-first-paint__title">Awutu Bawjiase</p>
-            <p class="app-first-paint__subtitle">Royal Heritage Platform</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
