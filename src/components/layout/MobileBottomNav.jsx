@@ -48,13 +48,13 @@ export default function MobileBottomNav() {
                 <span
                   className={`flex h-9 w-9 items-center justify-center transition-all duration-200 ${
                     isActive
-                      ? 'rounded-full bg-primary text-primary-foreground shadow-[0_10px_24px_-18px_rgba(212,165,87,0.95)] ring-1 ring-primary/35 scale-105'
+                      ? 'mb-1 rounded-full bg-primary text-primary-foreground shadow-[0_10px_24px_-18px_rgba(212,165,87,0.95)] ring-1 ring-primary/35 scale-105'
                       : 'text-primary/95'
                   }`}
                 >
                   <item.icon className="h-[0.95rem] w-[0.95rem]" />
                 </span>
-                <span className={`leading-none text-center whitespace-nowrap transition-all duration-200 ${isActive ? 'opacity-100' : 'opacity-80'}`}>{t(item.labelKey)}</span>
+                <span className={`mt-0.5 leading-none text-center whitespace-nowrap transition-all duration-200 ${isActive ? 'opacity-100' : 'opacity-80'}`}>{t(item.labelKey)}</span>
               </Link>
             );
           })}
