@@ -11,6 +11,7 @@ import { useAuth } from '@/lib/AuthContext';
 import HeroBackdrop from '@/components/shared/HeroBackdrop';
 import { getMergedHeroBanners, normalizeImageUrl } from '@/lib/siteSettings';
 import { usePreloadImages } from '@/hooks/usePreloadImages';
+import SmartImage from '@/components/shared/SmartImage';
 
 const KING_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/dc37adcaa_generated_e3452ee4.png';
 const ARTIFACTS_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/bffc1cf8d_generated_64e10ec5.png';
@@ -120,16 +121,16 @@ export default function Home() {
               <p className="mt-5 text-muted-foreground text-base sm:text-lg lg:text-xl leading-relaxed max-w-lg">
                 {(lang === 'twi' ? homeSettings.description_twi : homeSettings.description) || t('homeHeroDesc')}
               </p>
-              <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+              <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <Link
                   to="/memorial"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-sm text-sm font-medium tracking-wide hover:bg-primary/90 transition-colors"
+                  className="inline-flex w-full items-center justify-center gap-2 bg-primary px-6 py-3 text-sm font-medium tracking-wide text-primary-foreground transition-colors hover:bg-primary/90 sm:w-auto"
                 >
                   {t('viewMemorial')} <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   to="/kings"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-foreground rounded-sm text-sm font-medium tracking-wide hover:bg-muted transition-colors"
+                  className="inline-flex w-full items-center justify-center gap-2 border border-border px-6 py-3 text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-muted sm:w-auto"
                 >
                   {t('kingsArchive')}
                 </Link>
@@ -145,10 +146,13 @@ export default function Home() {
               >
                 <div className="relative">
                   <div className="aspect-[3/4] max-w-sm ml-auto rounded-sm overflow-hidden shadow-2xl">
-                    <img
+                    <SmartImage
                       src={king.photo_url || KING_IMAGE}
                       alt={king.name}
+                      wrapperClassName="h-full w-full"
                       className="w-full h-full object-cover"
+                      fallbackLabel="Memorial portrait unavailable"
+                      loading="eager"
                     />
                   </div>
                   <div className="absolute -bottom-6 -left-6 bg-card border border-border p-6 rounded-sm shadow-lg max-w-xs">
@@ -256,7 +260,13 @@ export default function Home() {
                 <Link key={leader.id} to={`/kings/${leader.id}`} className="surface-panel rounded-sm overflow-hidden hover:border-primary/30 transition-colors">
                   <div className="aspect-[3/4] bg-muted">
                     {leader.photo_url ? (
-                      <img src={leader.photo_url} alt={leader.name} className="w-full h-full object-cover" />
+                      <SmartImage
+                        src={leader.photo_url}
+                        alt={leader.name}
+                        wrapperClassName="h-full w-full"
+                        className="w-full h-full object-cover"
+                        fallbackLabel="Leader photo unavailable"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center"><Crown className="w-16 h-16 text-muted-foreground/25" /></div>
                     )}
@@ -356,7 +366,13 @@ export default function Home() {
               {featuredGallery.map((item) => (
                 <Link key={item.id} to="/gallery" className="group">
                   <div className="aspect-square bg-muted overflow-hidden rounded-sm">
-                    <img src={item.image_url} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <SmartImage
+                      src={item.image_url}
+                      alt={item.title}
+                      wrapperClassName="h-full w-full"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fallbackLabel="Gallery image unavailable"
+                    />
                   </div>
                   <p className="mt-3 text-sm font-medium">{item.title}</p>
                   {(item.caption || item.description) && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.caption || item.description}</p>}
@@ -376,7 +392,13 @@ export default function Home() {
                 <Link key={video.id} to="/videos" className="surface-panel rounded-sm overflow-hidden hover:border-primary/30 transition-colors">
                   <div className="aspect-video bg-muted">
                     {video.thumbnail_url ? (
-                      <img src={video.thumbnail_url} alt={video.title} className="w-full h-full object-cover" />
+                      <SmartImage
+                        src={video.thumbnail_url}
+                        alt={video.title}
+                        wrapperClassName="h-full w-full"
+                        className="w-full h-full object-cover"
+                        fallbackLabel="Video thumbnail unavailable"
+                      />
                     ) : null}
                   </div>
                   <div className="p-5">

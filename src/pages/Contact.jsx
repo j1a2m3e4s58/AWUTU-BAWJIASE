@@ -58,8 +58,8 @@ export default function Contact() {
         pageKey="contact"
       />
 
-      <section className="py-16 lg:py-24">
-        <div className="max-w-5xl mx-auto px-6 lg:px-10">
+      <section className="py-14 lg:py-24">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -67,7 +67,7 @@ export default function Contact() {
               transition={{ duration: 0.8 }}
               className="lg:col-span-3"
             >
-              <form onSubmit={handleSubmit} className="space-y-5 surface-panel rounded-3xl p-6 lg:p-8">
+              <form onSubmit={handleSubmit} className="space-y-5 surface-panel rounded-3xl p-5 sm:p-6 lg:p-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
                     placeholder={t('yourNamePlaceholder')}
@@ -98,7 +98,7 @@ export default function Contact() {
                   className="bg-card min-h-[160px]"
                   required
                 />
-                <Button type="submit" disabled={submit.isPending} className="gap-2">
+                <Button type="submit" disabled={submit.isPending} className="w-full gap-2 sm:w-auto">
                   <Send className="w-4 h-4" />
                   {submit.isPending ? t('sending') : t('sendMessage')}
                 </Button>
@@ -111,7 +111,7 @@ export default function Contact() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="lg:col-span-2"
             >
-              <div className="space-y-8 surface-panel rounded-3xl p-6 lg:p-8">
+              <div className="space-y-8 surface-panel rounded-3xl p-5 sm:p-6 lg:p-8">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <Mail className="w-4 h-4 text-primary" />
@@ -179,7 +179,7 @@ export default function Contact() {
       </section>
 
       <section className="pb-16 lg:pb-24">
-        <div className="max-w-6xl mx-auto px-6 lg:px-10">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -222,7 +222,7 @@ export default function Contact() {
                     href={BAWJIASE_BING_MAP_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                    className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:w-auto"
                   >
                     {t('openFullBingMap')}
                     <ExternalLink className="w-4 h-4" />

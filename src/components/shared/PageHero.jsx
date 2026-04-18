@@ -20,28 +20,28 @@ export default function PageHero({ label, title, description, imageUrl, pageKey 
   const resolvedImageUrl = pageSettings?.heroImageUrl || imageUrl;
 
   return (
-    <section className="relative pt-20 lg:pt-24 overflow-hidden">
+    <section className="relative overflow-hidden pt-[4.6rem] lg:pt-24">
       <HeroBackdrop
         imageUrl={resolvedImageUrl}
         overlayClassName="bg-gradient-to-b from-background/60 via-background/82 to-background"
       />
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-12 sm:py-16 lg:py-28">
+      <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 sm:py-16 lg:py-28">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center max-w-3xl mx-auto"
+          className="mx-auto max-w-3xl text-center"
         >
           {resolvedLabel && (
-            <p className="text-[0.68rem] uppercase tracking-[0.24em] sm:text-xs sm:tracking-[0.3em] text-primary font-medium mb-4">
+            <p className="mb-3 text-[0.64rem] font-medium uppercase tracking-[0.2em] text-primary sm:mb-4 sm:text-xs sm:tracking-[0.3em]">
               {resolvedLabel}
             </p>
           )}
-          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground leading-tight">
+          <h1 className="font-display text-[2rem] font-semibold leading-[1.08] text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
             {resolvedTitle}
           </h1>
           {resolvedDescription && (
-            <p className="mt-5 text-muted-foreground text-base sm:text-lg leading-relaxed">
+            <p className="mt-4 text-sm leading-7 text-muted-foreground sm:mt-5 sm:text-lg sm:leading-relaxed">
               {resolvedDescription}
             </p>
           )}

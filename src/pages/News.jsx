@@ -30,8 +30,8 @@ export default function News() {
       />
       <PageHero label={t('stayInformed')} title={t('newsTitle')} pageKey="news" />
 
-      <section className="py-16 lg:py-24">
-        <div className="max-w-4xl mx-auto px-6 lg:px-10">
+      <section className="py-14 lg:py-24">
+        <div className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-10">
           {isLoading ? (
             <div className="space-y-6">
               {[1, 2, 3].map((i) => (
@@ -42,7 +42,7 @@ export default function News() {
             </div>
           ) : announcements.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-muted-foreground">{t('noAnnouncements')}</p>
+              <p className="text-base text-muted-foreground">{t('noAnnouncements')}</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -53,11 +53,11 @@ export default function News() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.05 }}
-                  className={`p-6 lg:p-8 border rounded-3xl ${
+                  className={`border rounded-3xl p-5 sm:p-6 lg:p-8 ${
                     item.pinned ? 'border-primary/30 bg-primary/5' : 'border-border/50 bg-card'
                   }`}
                 >
-                  <div className="flex items-center gap-3 mb-3">
+                  <div className="mb-3 flex flex-wrap items-center gap-2 sm:gap-3">
                     {item.pinned && <Pin className="w-4 h-4 text-primary" />}
                     <Badge variant="secondary" className="text-xs uppercase tracking-wider">
                       {item.category?.replace('_', ' ') || t('general')}
@@ -68,8 +68,8 @@ export default function News() {
                       })}
                     </span>
                   </div>
-                  <h2 className="font-display text-2xl font-semibold mb-3">{getLocalizedField(item, 'title', lang)}</h2>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  <h2 className="mb-3 font-display text-xl sm:text-2xl font-semibold">{getLocalizedField(item, 'title', lang)}</h2>
+                  <p className="whitespace-pre-wrap text-sm leading-7 text-muted-foreground sm:text-base sm:leading-relaxed">
                     {getLocalizedField(item, 'content', lang)}
                   </p>
                   {item.attachment_url && (
@@ -78,7 +78,7 @@ export default function News() {
                         href={item.attachment_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/70 px-4 py-2 text-sm text-foreground hover:border-primary/40 transition-colors"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-background/70 px-4 py-2 text-sm text-foreground transition-colors hover:border-primary/40 sm:w-auto"
                       >
                         <Paperclip className="w-4 h-4 text-primary" />
                         {t('openAttachment')}

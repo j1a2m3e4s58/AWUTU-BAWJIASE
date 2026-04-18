@@ -7,6 +7,7 @@ import { Calendar, MapPin, Clock, Printer } from 'lucide-react';
 import PageHero from '../components/shared/PageHero';
 import FuneralCountdown from '../components/shared/FuneralCountdown';
 import ShareButtons from '../components/shared/ShareButtons';
+import SmartImage from '@/components/shared/SmartImage';
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/5c0255805_generated_bcf68b80.png';
 
@@ -34,8 +35,8 @@ export default function Funeral() {
         pageKey="funeral"
       />
 
-      <section className="py-16 lg:py-28">
-        <div className="max-w-4xl mx-auto px-6 lg:px-10">
+      <section className="py-14 lg:py-28">
+        <div className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-10">
           {/* Countdown to first upcoming event */}
           {funeralEvents.filter(e => new Date(e.date) > new Date()).slice(0, 1).map(e => (
             <FuneralCountdown key={e.id} targetDate={e.date} eventTitle={e.title} />
@@ -44,7 +45,7 @@ export default function Funeral() {
           {/* Funeral Events Schedule */}
           {funeralEvents.length > 0 && (
             <div className="mb-16">
-              <h2 className="font-display text-3xl font-semibold mb-8 text-center">{t('ceremonySchedule')}</h2>
+              <h2 className="mb-8 text-center font-display text-2xl sm:text-3xl font-semibold">{t('ceremonySchedule')}</h2>
               <div className="space-y-4">
                 {funeralEvents.map((event, i) => (
                   <motion.div
@@ -53,9 +54,9 @@ export default function Funeral() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: i * 0.1 }}
-                    className="p-6 bg-card border border-border/50 rounded-sm"
+                    className="rounded-sm border border-border/50 bg-card p-5 sm:p-6"
                   >
-                    <h3 className="font-display text-xl font-semibold mb-3">{event.title}</h3>
+                    <h3 className="mb-3 font-display text-lg sm:text-xl font-semibold">{event.title}</h3>
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                       {event.date && (
                         <span className="flex items-center gap-1.5">
@@ -81,7 +82,7 @@ export default function Funeral() {
                       )}
                     </div>
                     {event.description && (
-                      <p className="mt-3 text-muted-foreground leading-relaxed">{event.description}</p>
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base sm:leading-relaxed">{event.description}</p>
                     )}
                   </motion.div>
                 ))}
@@ -96,11 +97,17 @@ export default function Funeral() {
                 <div key={item.id}>
                   {item.image_url && (
                     <div className="aspect-video rounded-sm overflow-hidden mb-6">
-                      <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                      <SmartImage
+                        src={item.image_url}
+                        alt={item.title}
+                        wrapperClassName="h-full w-full"
+                        className="w-full h-full object-cover"
+                        fallbackLabel="Funeral image unavailable"
+                      />
                     </div>
                   )}
-                  <h2 className="font-display text-2xl font-semibold mb-4">{item.title}</h2>
-                  <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{item.content}</div>
+                  <h2 className="mb-4 font-display text-xl sm:text-2xl font-semibold">{item.title}</h2>
+                  <div className="whitespace-pre-wrap text-sm leading-7 text-muted-foreground sm:text-base sm:leading-relaxed">{item.content}</div>
                 </div>
               ))}
             </div>

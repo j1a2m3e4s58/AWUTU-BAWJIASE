@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { useAuth } from '@/lib/AuthContext';
 import { logAdminActivity } from '@/lib/adminAudit';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
 
 export default function AdminMessages() {
   const qc = useQueryClient();
@@ -81,18 +82,22 @@ export default function AdminMessages() {
 
   return (
     <div>
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6">
-        <h2 className="font-display text-2xl font-semibold text-sidebar-foreground">Contact Messages</h2>
-        <div className="relative w-full md:w-72">
-          <Search className="absolute left-3 top-1/2 w-4 h-4 -translate-y-1/2 text-sidebar-foreground/40" />
-          <Input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search messages..."
-            className="pl-9 bg-sidebar-accent border-sidebar-border text-sidebar-foreground"
-          />
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Contact Messages"
+        description="Review public inquiries, save replies, and keep the inbox organized."
+        onRefresh={() => qc.invalidateQueries({ queryKey: ['admin-messages'] })}
+        action={
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-3 top-1/2 w-4 h-4 -translate-y-1/2 text-sidebar-foreground/40" />
+            <Input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search messages..."
+              className="pl-9 bg-sidebar-accent border-sidebar-border text-sidebar-foreground"
+            />
+          </div>
+        }
+      />
 
       <div className="space-y-2">
         {filteredItems.map((item) => (

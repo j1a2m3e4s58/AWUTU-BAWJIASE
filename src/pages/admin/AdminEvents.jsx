@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import BilingualFieldHelper from '@/components/admin/BilingualFieldHelper';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import MediaUploader from '@/components/shared/MediaUploader';
 
 const empty = {
   title: '', title_twi: '', description: '', description_twi: '', date: '', end_date: '', location: '', venue: '', organizer: '', dress_code: '', contact_person: '', contact_phone: '',
@@ -72,10 +74,12 @@ export default function AdminEvents() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-display text-2xl font-semibold text-sidebar-foreground">Event Manager</h2>
-        <Button onClick={() => { setForm({ ...empty }); setEditing('new'); }} size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add</Button>
-      </div>
+      <AdminPageHeader
+        title="Event Manager"
+        description="Control upcoming and past events, featured schedules, and public ceremony details."
+        onRefresh={() => qc.invalidateQueries({ queryKey: ['admin-events'] })}
+        action={<Button onClick={() => { setForm({ ...empty }); setEditing('new'); }} size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add</Button>}
+      />
 
       <div className="space-y-2">
         {items.map((item) => (
@@ -129,7 +133,15 @@ export default function AdminEvents() {
               <div><Label className="text-sidebar-foreground/70">Contact Person</Label><Input value={form.contact_person} onChange={(e) => setForm({ ...form, contact_person: e.target.value })} className="bg-sidebar-accent border-sidebar-border text-sidebar-foreground" /></div>
               <div><Label className="text-sidebar-foreground/70">Contact Phone</Label><Input value={form.contact_phone} onChange={(e) => setForm({ ...form, contact_phone: e.target.value })} className="bg-sidebar-accent border-sidebar-border text-sidebar-foreground" /></div>
             </div>
-            <div><Label className="text-sidebar-foreground/70">Featured Image URL</Label><Input value={form.featured_image_url} onChange={(e) => setForm({ ...form, featured_image_url: e.target.value })} className="bg-sidebar-accent border-sidebar-border text-sidebar-foreground" /></div>
+            <div>
+              <MediaUploader
+                label="Featured Image"
+                value={form.featured_image_url}
+                onChange={(url) => setForm({ ...form, featured_image_url: url })}
+                accept="image/*"
+                mediaType="image"
+              />
+            </div>
             <div>
               <Label className="text-sidebar-foreground/70">Category</Label>
               <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>

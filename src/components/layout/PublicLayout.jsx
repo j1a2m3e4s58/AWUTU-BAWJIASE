@@ -4,6 +4,7 @@ import PublicHeader from './PublicHeader';
 import PublicFooter from './PublicFooter';
 import MobileBottomNav from './MobileBottomNav';
 import { useAuth } from '@/lib/AuthContext';
+import BackToTopButton from '@/components/shared/BackToTopButton';
 
 export default function PublicLayout() {
   const { appPublicSettings } = useAuth();
@@ -40,6 +41,7 @@ export default function PublicLayout() {
         <Outlet />
       </main>
       <PublicFooter />
+      <BackToTopButton />
       <MobileBottomNav />
     </div>
   );

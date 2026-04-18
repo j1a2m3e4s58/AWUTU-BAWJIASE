@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import SmartImage from '@/components/shared/SmartImage';
 
 const DEFAULT_HERO_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/5c0255805_generated_bcf68b80.png';
 
@@ -16,17 +17,23 @@ export default function HeroBackdrop({ imageUrl, className = '', overlayClassNam
 
   return (
     <div className={`absolute inset-0 z-0 overflow-hidden ${className}`}>
-      <motion.img
-        src={resolvedImage}
-        alt=""
-        loading="eager"
-        decoding="async"
-        fetchPriority="high"
-        className="w-full h-full object-cover"
+      <motion.div
         initial={{ scale: 1.03 }}
         animate={{ scale: 1.1, x: [-8, 8, -8] }}
         transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-      />
+        className="h-full w-full"
+      >
+        <SmartImage
+          src={resolvedImage}
+          alt=""
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          wrapperClassName="h-full w-full"
+          className="h-full w-full object-cover"
+          fallbackLabel="Default hero image"
+        />
+      </motion.div>
       <div className={`absolute inset-0 ${overlayClassName}`} />
       <motion.div
         className="absolute -left-16 top-20 h-56 w-56 rounded-full bg-primary/18 blur-3xl"

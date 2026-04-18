@@ -37,14 +37,14 @@ export default function Documents() {
       />
       <PageHero label={t('documentsLabel')} title={t('documentsTitle')} description={t('documentsDesc')} pageKey="documents" />
 
-      <section className="py-16 lg:py-24">
-        <div className="max-w-4xl mx-auto px-6 lg:px-10">
+      <section className="py-14 lg:py-24">
+        <div className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-10">
           {featuredDocs.length > 0 && (
             <div className="grid gap-4 md:grid-cols-3 mb-10">
               {featuredDocs.map((doc) => (
                 <a key={doc.id} href={doc.file_url} target="_blank" rel="noopener noreferrer" className="surface-panel rounded-sm p-5 hover:border-primary/30 transition-colors">
                   <p className="text-[11px] uppercase tracking-[0.18em] text-primary mb-3">{t('featuredDocument')}</p>
-                  <p className="font-medium">{getLocalizedField(doc, 'title', lang)}</p>
+                  <p className="font-medium line-clamp-2">{getLocalizedField(doc, 'title', lang)}</p>
                   <p className="text-sm text-muted-foreground mt-2 line-clamp-3">{getLocalizedField(doc, 'preview_text', lang) || getLocalizedField(doc, 'description', lang)}</p>
                 </a>
               ))}
@@ -90,7 +90,8 @@ export default function Documents() {
           ) : filtered.length === 0 ? (
             <div className="text-center py-20">
               <FileText className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
-              <p className="text-muted-foreground">{t('noDocuments')}</p>
+              <p className="text-lg text-foreground">No documents matched this view</p>
+              <p className="mt-2 text-muted-foreground">{t('noDocuments')}</p>
             </div>
           ) : (
             <div className="space-y-3">

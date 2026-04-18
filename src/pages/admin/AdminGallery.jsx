@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { toast } from 'sonner';
 import MediaUploader from '../../components/shared/MediaUploader';
 import BilingualFieldHelper from '@/components/admin/BilingualFieldHelper';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
 
 const emptyItem = { title: '', title_twi: '', caption: '', caption_twi: '', description: '', description_twi: '', album: '', tags: '', featured: false, image_url: '', category: 'other', published: true };
 
@@ -85,10 +86,12 @@ export default function AdminGallery() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-display text-2xl font-semibold text-sidebar-foreground">Gallery</h2>
-        <Button onClick={() => { setForm({ ...emptyItem }); setEditing('new'); }} size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Item</Button>
-      </div>
+      <AdminPageHeader
+        title="Gallery"
+        description="Manage public images, captions, albums, and featured visual moments."
+        onRefresh={() => queryClient.invalidateQueries({ queryKey: ['admin-gallery'] })}
+        action={<Button onClick={() => { setForm({ ...emptyItem }); setEditing('new'); }} size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Item</Button>}
+      />
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {items.map((item) => (

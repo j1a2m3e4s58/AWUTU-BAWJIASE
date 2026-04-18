@@ -9,6 +9,7 @@ import CommentThread from '@/components/shared/CommentThread';
 import { useLanguage } from '@/lib/LanguageContext';
 import { getLocalizedField } from '@/lib/localizedContent';
 import { usePreloadImages } from '@/hooks/usePreloadImages';
+import SmartImage from '@/components/shared/SmartImage';
 
 const ARTIFACTS_IMAGE = 'https://media.base44.com/images/public/69de42095e2296b1a9a58aa1/bffc1cf8d_generated_64e10ec5.png';
 
@@ -45,6 +46,11 @@ export default function Gallery() {
     acc[comment.target_id] = (acc[comment.target_id] || 0) + 1;
     return acc;
   }, {});
+  const albumCounts = sorted.reduce((acc, item) => {
+    if (!item.album) return acc;
+    acc[item.album] = (acc[item.album] || 0) + 1;
+    return acc;
+  }, {});
 
   return (
     <div>
@@ -56,18 +62,18 @@ export default function Gallery() {
         pageKey="gallery"
       />
 
-      <section className="py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+      <section className="py-14 lg:py-24">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10">
           {featuredItems.length > 0 && (
             <div className="surface-panel rounded-sm p-6 lg:p-8 mb-10">
-              <div className="flex items-center justify-between gap-4 mb-6">
+              <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <p className="text-xs uppercase tracking-[0.28em] text-primary font-medium">{t('featuredMoments')}</p>
                   <h2 className="font-display text-2xl lg:text-3xl font-semibold text-foreground mt-2">
                     {t('highlightedImages')}
                   </h2>
                 </div>
-                <p className="text-sm text-muted-foreground max-w-xl">
+                <p className="max-w-xl text-sm leading-6 text-muted-foreground">
                   {t('galleryFeaturedDesc')}
                 </p>
               </div>
@@ -80,14 +86,16 @@ export default function Gallery() {
                     onClick={() => setLightbox(item)}
                   >
                     <div className="aspect-[4/3] overflow-hidden rounded-sm bg-muted">
-                      <img
+                      <SmartImage
                         src={item.image_url}
                         alt={getLocalizedField(item, 'title', lang)}
+                        wrapperClassName="h-full w-full"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        fallbackLabel="Gallery image unavailable"
                       />
                     </div>
                     <div className="mt-3 flex items-center justify-between gap-3">
-                      <p className="font-medium text-sm text-foreground">{getLocalizedField(item, 'title', lang)}</p>
+                      <p className="min-w-0 flex-1 truncate font-medium text-sm text-foreground">{getLocalizedField(item, 'title', lang)}</p>
                       <span className="text-[11px] uppercase tracking-[0.18em] text-primary">{t('featured')}</span>
                     </div>
                     {(item.caption || item.description) && (
@@ -154,6 +162,20 @@ export default function Gallery() {
                 ))}
               </div>
             )}
+
+            {Object.keys(albumCounts).length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(albumCounts).slice(0, 6).map(([albumName, count]) => (
+                  <span
+                    key={albumName}
+                    className="inline-flex items-center gap-2 border border-border/60 bg-card/60 px-3 py-1.5 text-[11px] uppercase tracking-[0.14em] text-muted-foreground"
+                  >
+                    <span className="text-foreground">{albumName}</span>
+                    <span className="text-primary">{count}</span>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           {isLoading ? (
@@ -180,15 +202,17 @@ export default function Gallery() {
                   onClick={() => setLightbox(item)}
                 >
                   <div className="aspect-square overflow-hidden rounded-sm bg-muted">
-                    <img
+                    <SmartImage
                       src={item.image_url}
                       alt={getLocalizedField(item, 'title', lang)}
+                      wrapperClassName="h-full w-full"
                       className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 grayscale-[30%] group-hover:grayscale-0"
+                      fallbackLabel="Gallery image unavailable"
                     />
                   </div>
                   <div className="mt-2">
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-medium">{getLocalizedField(item, 'title', lang)}</p>
+                      <p className="min-w-0 flex-1 truncate text-sm font-medium">{getLocalizedField(item, 'title', lang)}</p>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground">
                         {item.featured && <span className="text-primary">{t('featured')}</span>}
                         <span className="inline-flex items-center gap-1">
@@ -225,7 +249,7 @@ export default function Gallery() {
             onClick={() => setLightbox(null)}
           >
             <div
-              className="flex w-full max-w-4xl max-h-[82vh] flex-col overflow-hidden border border-border/60 bg-card text-card-foreground shadow-2xl shadow-black/50"
+              className="flex w-full max-w-4xl max-h-[86vh] flex-col overflow-hidden border border-border/60 bg-card text-card-foreground shadow-2xl shadow-black/50"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start justify-between gap-4 border-b border-border/60 bg-gradient-to-br from-primary/10 via-background to-accent/10 px-4 py-4 sm:px-5">
@@ -251,14 +275,20 @@ export default function Gallery() {
 
               <div className="grid min-h-0 flex-1 gap-0 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
                 <div className="border-b border-border/60 bg-black/45 p-4 md:border-b-0 md:border-r">
-                  <motion.img
+                  <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
-                    src={lightbox.image_url}
-                    alt={getLocalizedField(lightbox, 'title', lang)}
-                    className="mx-auto aspect-square max-h-44 w-full max-w-[14rem] object-cover sm:max-h-52 md:max-h-64"
-                  />
+                  >
+                    <SmartImage
+                      src={lightbox.image_url}
+                      alt={getLocalizedField(lightbox, 'title', lang)}
+                      wrapperClassName="mx-auto aspect-square max-h-44 w-full max-w-[14rem] sm:max-h-52 md:max-h-64"
+                      className="h-full w-full object-cover"
+                      fallbackLabel="Image unavailable"
+                      loading="eager"
+                    />
+                  </motion.div>
                 </div>
 
                 <div className="min-h-0 overflow-y-auto p-4 sm:p-5">

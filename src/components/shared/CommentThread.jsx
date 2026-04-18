@@ -141,7 +141,12 @@ export default function CommentThread({ targetType, targetId, title = 'Comments'
     mutationFn: (payload) => firebaseApi.entities.Comment.create(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: ['gallery-comments-counts'] });
+      queryClient.invalidateQueries({ queryKey: ['training-comments-counts'] });
       toast.success('Comment posted');
+    },
+    onError: (error) => {
+      toast.error(error?.message || 'Could not post comment');
     },
   });
 

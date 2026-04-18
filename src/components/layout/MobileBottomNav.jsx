@@ -41,15 +41,20 @@ export default function MobileBottomNav() {
                 }`}
               >
                 <span
+                  className={`absolute left-1/2 top-0 h-[2px] w-7 -translate-x-1/2 bg-primary transition-all duration-300 ${
+                    isActive ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+                <span
                   className={`flex h-9 w-9 items-center justify-center transition-all duration-200 ${
                     isActive
-                      ? 'rounded-full bg-primary text-primary-foreground shadow-[0_10px_24px_-18px_rgba(212,165,87,0.95)] ring-1 ring-primary/35'
+                      ? 'rounded-full bg-primary text-primary-foreground shadow-[0_10px_24px_-18px_rgba(212,165,87,0.95)] ring-1 ring-primary/35 scale-105'
                       : 'text-primary/95'
                   }`}
                 >
                   <item.icon className="h-[0.95rem] w-[0.95rem]" />
                 </span>
-                <span className="leading-none text-center whitespace-nowrap">{t(item.labelKey)}</span>
+                <span className={`leading-none text-center whitespace-nowrap transition-all duration-200 ${isActive ? 'opacity-100' : 'opacity-80'}`}>{t(item.labelKey)}</span>
               </Link>
             );
           })}

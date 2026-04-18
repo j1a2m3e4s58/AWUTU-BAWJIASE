@@ -12,6 +12,7 @@ import Seo from '@/components/shared/Seo';
 import CommentThread from '@/components/shared/CommentThread';
 import { getLocalizedField } from '@/lib/localizedContent';
 import { usePreloadImages } from '@/hooks/usePreloadImages';
+import SmartImage from '@/components/shared/SmartImage';
 
 const CATEGORY_LABELS = {
   royal_protocol: 'Royal Protocol',
@@ -92,13 +93,13 @@ export default function Training() {
         pageKey="videos"
       />
 
-      <section className="py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          <div className="surface-panel rounded-3xl p-6 lg:p-8 mb-10">
+      <section className="py-14 lg:py-24">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10">
+          <div className="surface-panel rounded-3xl p-5 sm:p-6 lg:p-8 mb-10">
             <div className="grid gap-6 lg:grid-cols-[1.4fr_0.8fr] lg:items-center">
               <div>
                 <p className="text-xs uppercase tracking-[0.3em] text-primary font-medium mb-3">{t('publicMedia')}</p>
-                <h2 className="font-display text-3xl lg:text-4xl font-semibold text-foreground">
+                <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground">
                   {t('videoIntroTitle')}
                 </h2>
                 <p className="mt-4 text-muted-foreground leading-7 max-w-2xl">
@@ -132,7 +133,14 @@ export default function Training() {
                   onClick={() => setActiveVideo(featuredVideo)}
                 >
                   {featuredVideo.thumbnail_url ? (
-                    <img src={featuredVideo.thumbnail_url} alt={featuredVideo.title} className="w-full h-full object-cover" />
+                    <SmartImage
+                      src={featuredVideo.thumbnail_url}
+                      alt={featuredVideo.title}
+                      wrapperClassName="h-full w-full"
+                      className="h-full w-full object-cover"
+                      loading="eager"
+                      fallbackLabel="Video thumbnail unavailable"
+                    />
                   ) : (
                     <div className="flex h-full items-center justify-center bg-gradient-to-br from-muted to-background">
                       <Video className="w-16 h-16 text-muted-foreground/40" />
@@ -180,10 +188,12 @@ export default function Training() {
                 >
                   <div className="aspect-video bg-muted overflow-hidden">
                     {video.thumbnail_url ? (
-                      <img
+                      <SmartImage
                         src={video.thumbnail_url}
                         alt={getLocalizedField(video, 'title', lang)}
+                        wrapperClassName="h-full w-full"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        fallbackLabel="Video thumbnail unavailable"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-background">
@@ -286,10 +296,12 @@ export default function Training() {
                     onClick={() => setActiveVideo(video)}
                   >
                     {video.thumbnail_url ? (
-                      <img
+                      <SmartImage
                         src={video.thumbnail_url}
                         alt={getLocalizedField(video, 'title', lang)}
+                        wrapperClassName="h-full w-full"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fallbackLabel="Video thumbnail unavailable"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
@@ -350,10 +362,24 @@ export default function Training() {
           onClick={() => setActiveVideo(null)}
         >
           <div
-            className="w-full max-w-4xl bg-background rounded-3xl overflow-hidden shadow-2xl"
+            className="flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden border border-border/60 bg-background shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="aspect-video w-full bg-black">
+            <div className="flex items-start justify-between gap-4 border-b border-border/60 bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4 sm:p-5">
+              <div className="min-w-0 flex-1">
+                <h3 className="font-display text-lg sm:text-xl font-semibold">{getLocalizedField(activeVideo, 'title', lang)}</h3>
+                {getLocalizedField(activeVideo, 'description', lang) && (
+                  <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{getLocalizedField(activeVideo, 'description', lang)}</p>
+                )}
+              </div>
+              <button
+                onClick={() => setActiveVideo(null)}
+                className="shrink-0 border border-border/60 bg-background/70 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
+              >
+                {t('close')}
+              </button>
+            </div>
+            <div className="aspect-video w-full shrink-0 bg-black">
               {isGDriveEmbed(activeVideo.video_url) ? (
                 <iframe
                   src={activeVideo.video_url}
@@ -371,20 +397,8 @@ export default function Training() {
                 />
               )}
             </div>
-            <div className="p-5 flex items-start justify-between gap-4">
-              <div className="flex-1">
-                  <h3 className="font-display text-xl font-semibold">{getLocalizedField(activeVideo, 'title', lang)}</h3>
-                  {getLocalizedField(activeVideo, 'description', lang) && (
-                    <p className="text-sm text-muted-foreground mt-1">{getLocalizedField(activeVideo, 'description', lang)}</p>
-                  )}
+            <div className="min-h-0 overflow-y-auto p-5">
                 <CommentThread targetType="training_video" targetId={activeVideo.id} title={t('videoComments')} />
-              </div>
-              <button
-                onClick={() => setActiveVideo(null)}
-                className="text-xs text-muted-foreground hover:text-foreground border border-border px-3 py-1.5 rounded-sm whitespace-nowrap"
-              >
-                {t('close')}
-              </button>
             </div>
           </div>
         </div>

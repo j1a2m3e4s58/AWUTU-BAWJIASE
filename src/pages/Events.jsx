@@ -2,13 +2,14 @@
 import { firebaseApi } from '@/api/firebaseClient';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Clock, User, Shirt, Phone } from 'lucide-react';
+import { Calendar, MapPin, Clock, User, Shirt, Phone, CalendarRange } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import PageHero from '../components/shared/PageHero';
 import { useLanguage } from '@/lib/LanguageContext';
 import Seo from '@/components/shared/Seo';
 import { getLocalizedField } from '@/lib/localizedContent';
 import { usePreloadImages } from '@/hooks/usePreloadImages';
+import SmartImage from '@/components/shared/SmartImage';
 
 export default function Events() {
   const { t, lang } = useLanguage();
@@ -31,6 +32,7 @@ export default function Events() {
   const upcomingByMonth = groupByMonth(upcoming);
   const pastByMonth = groupByMonth(past);
   usePreloadImages([featured?.featured_image_url], 1);
+  const monthCounts = Object.entries(upcomingByMonth).slice(0, 4);
 
   return (
     <div>
@@ -40,19 +42,26 @@ export default function Events() {
       />
       <PageHero label={t('ceremoniesLabel')} title={t('eventsTitle')} pageKey="events" />
 
-      <section className="py-16 lg:py-24">
-        <div className="max-w-5xl mx-auto px-6 lg:px-10">
+      <section className="py-14 lg:py-24">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-10">
           {featured && (
             <div className="surface-panel rounded-sm overflow-hidden mb-10">
               <div className="grid lg:grid-cols-[1fr_1.1fr]">
                 <div className="aspect-[4/3] bg-muted">
                   {featured.featured_image_url ? (
-                    <img src={featured.featured_image_url} alt={featured.title} className="w-full h-full object-cover" />
+                    <SmartImage
+                      src={featured.featured_image_url}
+                      alt={featured.title}
+                      wrapperClassName="h-full w-full"
+                      className="h-full w-full object-cover"
+                      loading="eager"
+                      fallbackLabel="Event image unavailable"
+                    />
                   ) : null}
                 </div>
-                <div className="p-6 lg:p-8">
+                <div className="p-5 sm:p-6 lg:p-8">
                   <p className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-3">{t('featuredEvent')}</p>
-                  <h2 className="font-display text-3xl font-semibold">{getLocalizedField(featured, 'title', lang)}</h2>
+                  <h2 className="font-display text-2xl sm:text-3xl font-semibold">{getLocalizedField(featured, 'title', lang)}</h2>
                   {getLocalizedField(featured, 'description', lang) && <p className="text-muted-foreground mt-4 leading-7">{getLocalizedField(featured, 'description', lang)}</p>}
                   <div className="grid md:grid-cols-2 gap-4 mt-6 text-sm text-muted-foreground">
                     <p><span className="text-foreground font-medium">{t('venue')}:</span> {featured.venue || featured.location || t('communityVenue')}</p>
@@ -65,6 +74,21 @@ export default function Events() {
             </div>
           )}
 
+          {monthCounts.length > 0 && (
+            <div className="mb-8 flex flex-wrap gap-2">
+              {monthCounts.map(([month, monthEvents]) => (
+                <span
+                  key={month}
+                  className="inline-flex items-center gap-2 border border-border/60 bg-card/60 px-3 py-1.5 text-[11px] uppercase tracking-[0.14em] text-muted-foreground"
+                >
+                  <CalendarRange className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-foreground">{month}</span>
+                  <span className="text-primary">{monthEvents.length}</span>
+                </span>
+              ))}
+            </div>
+          )}
+
           {isLoading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -73,7 +97,9 @@ export default function Events() {
             </div>
           ) : events.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-muted-foreground">{t('noEvents')}</p>
+              <CalendarRange className="mx-auto mb-4 h-12 w-12 text-muted-foreground/25" />
+              <p className="text-lg text-foreground">No community events yet</p>
+              <p className="mt-2 text-muted-foreground">{t('noEvents')}</p>
             </div>
           ) : (
             <>
