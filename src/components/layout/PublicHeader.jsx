@@ -176,14 +176,24 @@ export default function PublicHeader() {
             >
               <div className="h-full overflow-hidden border border-border/70 bg-background/92 shadow-[0_30px_70px_-35px_rgba(0,0,0,0.55)] backdrop-blur-2xl">
                 <div className="border-b border-border/60 bg-gradient-to-br from-primary/10 via-background to-accent/10 px-5 py-5">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
-                      <Crown className="w-5 h-5 text-primary" />
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
+                        <Crown className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-display text-lg font-semibold leading-none text-foreground">{siteName}</p>
+                        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{t('mobileNavigation')}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-display text-lg font-semibold leading-none text-foreground">{siteName}</p>
-                      <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground mt-1">{t('mobileNavigation')}</p>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex h-10 w-10 items-center justify-center border border-border/60 bg-background/70 text-foreground transition-colors hover:bg-muted/70"
+                      aria-label="Close menu"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
                   </div>
                 </div>
 
