@@ -224,30 +224,46 @@ export default function Gallery() {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/82 p-4 backdrop-blur-md sm:p-6"
             onClick={() => setLightbox(null)}
           >
-            <button
-              onClick={() => setLightbox(null)}
-              className="absolute right-4 top-4 z-10 border border-white/10 bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:text-white sm:right-6 sm:top-6"
-            >
-              <X className="w-8 h-8" />
-            </button>
             <div
-              className="w-full max-w-5xl max-h-[90vh] overflow-y-auto border border-border/60 bg-card text-card-foreground shadow-2xl shadow-black/50"
+              className="flex w-full max-w-4xl max-h-[82vh] flex-col overflow-hidden border border-border/60 bg-card text-card-foreground shadow-2xl shadow-black/50"
               onClick={(e) => e.stopPropagation()}
             >
-              <motion.img
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                src={lightbox.image_url}
-                alt={getLocalizedField(lightbox, 'title', lang)}
-                className="w-full max-h-[65vh] object-contain bg-black/45"
-              />
-              <div className="p-6">
-                <p className="text-foreground font-display text-2xl">{getLocalizedField(lightbox, 'title', lang)}</p>
-                {(getLocalizedField(lightbox, 'caption', lang) || getLocalizedField(lightbox, 'description', lang)) && (
-                  <p className="text-muted-foreground text-sm mt-2 leading-6">{getLocalizedField(lightbox, 'caption', lang) || getLocalizedField(lightbox, 'description', lang)}</p>
-                )}
-                <CommentThread targetType="gallery_item" targetId={lightbox.id} title={t('imageComments')} />
+              <div className="flex items-start justify-between gap-4 border-b border-border/60 bg-gradient-to-br from-primary/10 via-background to-accent/10 px-4 py-4 sm:px-5">
+                <div className="min-w-0">
+                  <p className="truncate text-foreground font-display text-xl sm:text-2xl">
+                    {getLocalizedField(lightbox, 'title', lang)}
+                  </p>
+                  {(getLocalizedField(lightbox, 'caption', lang) || getLocalizedField(lightbox, 'description', lang)) && (
+                    <p className="mt-2 line-clamp-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                      {getLocalizedField(lightbox, 'caption', lang) || getLocalizedField(lightbox, 'description', lang)}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setLightbox(null)}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center border border-border/60 bg-background/70 text-foreground transition-colors hover:bg-muted/70"
+                  aria-label="Close image comments"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="grid min-h-0 flex-1 gap-0 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
+                <div className="border-b border-border/60 bg-black/45 p-4 md:border-b-0 md:border-r">
+                  <motion.img
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    src={lightbox.image_url}
+                    alt={getLocalizedField(lightbox, 'title', lang)}
+                    className="mx-auto aspect-square max-h-44 w-full max-w-[14rem] object-cover sm:max-h-52 md:max-h-64"
+                  />
+                </div>
+
+                <div className="min-h-0 overflow-y-auto p-4 sm:p-5">
+                  <CommentThread targetType="gallery_item" targetId={lightbox.id} title={t('imageComments')} />
+                </div>
               </div>
             </div>
           </motion.div>
