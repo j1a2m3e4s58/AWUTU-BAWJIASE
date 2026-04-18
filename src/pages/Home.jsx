@@ -121,16 +121,16 @@ export default function Home() {
               <p className="mt-5 text-muted-foreground text-base sm:text-lg lg:text-xl leading-relaxed max-w-lg">
                 {(lang === 'twi' ? homeSettings.description_twi : homeSettings.description) || t('homeHeroDesc')}
               </p>
-              <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+              <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <Link
                   to="/memorial"
-                  className="inline-flex w-full items-center justify-center gap-2 bg-primary px-6 py-3 text-sm font-medium tracking-wide text-primary-foreground transition-colors hover:bg-primary/90 sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 bg-primary px-6 py-3 text-sm font-medium tracking-wide text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   {t('viewMemorial')} <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   to="/kings"
-                  className="inline-flex w-full items-center justify-center gap-2 border border-border px-6 py-3 text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-muted sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 border border-border px-6 py-3 text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-muted"
                 >
                   {t('kingsArchive')}
                 </Link>
